@@ -1,0 +1,146 @@
+// @import "includes/mixins";
+// @import "includes/variables";
+// @import "includes/typography";
+// @import "includes/sidebar";
+// @import "includes/toolbar";
+// @import "includes/misc";
+// @import "includes/inputs";
+// @import "includes/footer";
+// @import "includes/cards";
+// @import "includes/tables";
+// @import "includes/tabs";
+// @import "includes/checkboxes";
+// @import "includes/tooltips";
+// @import "includes/buttons";
+@import "font/proxima/100";
+@import "font/proxima/400";
+@import "font/proxima/500";
+@import "font/proxima/700";
+// @import "font/proxima/800";
+
+body {
+    overscroll-behavior-x: none !important;
+    overscroll-behavior-y: none !important;
+    overscroll-behavior: none !important;
+}
+
+
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently not supported by any browser */
+}
+
+.border-top {
+    border-top: 1px solid rgba(#000, 0.08);
+}
+
+.border-right {
+    border-right: 1px solid rgba(#000, 0.08);
+}
+
+.border-left {
+    border-left: 1px solid rgba(#000, 0.08);
+}
+
+.border-bottom {
+    border-bottom: 1px solid rgba(#000, 0.08);
+}
+
+
+.application {
+    font-family: "font-proxima";
+}
+
+
+.v-btn {
+    font-weight: 600 !important;
+    text-transform: none !important;
+
+    svg[right] {
+        margin-left: 10px;
+    }
+
+    svg[left] {
+        margin-right: 10px;
+    }
+}
+
+.toasted-container {
+    padding: 0 15px;
+    pointer-events: none !important;
+    &.top-center {
+        top: 0 !important;
+
+        .toasted {
+            // margin-top: 0 !important;
+            border-radius: 3px !important;
+        }
+    }
+
+    &.bottom-center {
+        bottom: 0 !important;
+
+        .toasted {
+            margin-top: 0 !important;
+            border-radius: 3px !important;
+        }
+    }
+
+    width: 80vw;
+    max-width:620px !important;
+
+    .toasted {
+        pointer-events: all;
+        font-family: "font-proxima" !important;
+        font-weight: 500 !important;
+        font-size: 15px !important;
+        box-shadow: none !important;
+
+        .action {
+            color: rgba(#fff, 0.5) !important;
+            text-decoration: none;
+            transition: color 0.4s;
+
+            &:hover {
+                color: rgba(#fff, 0.8) !important;
+                text-decoration: none !important;
+            }
+        }
+
+        // padding: 015px !important;
+    }
+}
+
+
+.fa-spin {
+    -webkit-animation: fa-spin 0.4s infinite linear;
+    animation: fa-spin 0.4s infinite linear;
+}
+
+.text-muted {
+    opacity: 0.5;
+    font-weight: normal;
+}
+
+.page-header {
+
+    h1 {
+        font-size: 3em;
+        letter-spacing: -0.03em;
+
+        .text-muted {
+            opacity: 0.3;
+            font-weight: 100;
+        }
+    }
+
+    @media(max-width: 768px) {
+      h1 {
+        font-size:1.6em;
+      }
+    }
+}

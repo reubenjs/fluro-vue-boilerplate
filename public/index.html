@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="icon" href="<$= BASE_URL $>favicon.ico">
+
+	<!-- This loads your app settings from Fluro -->
+	<script src="<$= VUE_APP_REMOTE_URL $>/appdata.js"></script>
+
+	
+	<$ if(NODE_ENV == 'production') { $>
+		<!-- If running on Fluro (deployed remotely) -->
+		<!-- Use the title and header injections as defined in Fluro -->
+		<title><%= readableName %></title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="mobile-web-app-capable" content="yes">
+
+		<!-- Mobile Web Settings -->
+		<% if(app.webApplicationEnabled) { %>
+			<link rel="manifest" href="/manifest.json">
+
+			<% if(app.webApplicationStatusBarStyle) { %>
+				<meta name="apple-mobile-web-app-status-bar-style" content="<%= app.webApplicationStatusBarStyle %>"/>
+			<% } %>
+
+			<% if(app.webApplicationLaunchImage) { %>
+				<link rel="apple-touch-startup-image" href="<%= apipath %>/get/<%= app.webApplicationLaunchImage %>/file/image.png?w=320&h=480"/>
+				<link rel="apple-touch-startup-image" href="<%= apipath %>/get/<%= app.webApplicationLaunchImage %>/file/image.png?w=768&h=1004" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)"/>
+				<link rel="apple-touch-startup-image" href="<%= apipath %>/get/<%= app.webApplicationLaunchImage %>/file/image.png?w=1024&h=748" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)"/>
+			<% } %> <% if(app.webApplicationIcon) { %> <link rel="apple-touch-icon" href="<%= apipath %>/get/<%= app.webApplicationIcon %>/file/image.png?w=320&h=320"/>
+				<link rel="apple-touch-icon" sizes="76x76" href="<%= apipath %>/get/<%= app.webApplicationIcon %>/file/image.png?w=76&h=76"/>
+				<link rel="apple-touch-icon" sizes="120x120" href="<%= apipath %>/get/<%= app.webApplicationIcon %>/file/image.png?w=120&h=120"/>
+				<link rel="apple-touch-icon" sizes="152x152" href="<%= apipath %>/get/<%= app.webApplicationIcon %>/file/image.png?w=152&h=152"/>
+			<% } else if(app.applicationIcon) { %>
+				<link rel="apple-touch-icon" href="<%= apipath %>/get/<%= app.applicationIcon %>/file/image.png?w=320&h=320"/>
+				<link rel="apple-touch-icon" sizes="76x76" href="<%= apipath %>/get/<%= app.applicationIcon %>/file/image.png?w=76&h=76"/>
+				<link rel="apple-touch-icon" sizes="120x120" href="<%= apipath %>/get/<%= app.applicationIcon %>/file/image.png?w=120&h=120"/>
+				<link rel="apple-touch-icon" sizes="152x152" href="<%= apipath %>/get/<%= app.applicationIcon %>/file/image.png?w=152&h=152"/>
+			<% } else if(app.icon) { %>
+				<link rel="apple-touch-icon" href="<%= apipath %>/get/<%= app.icon %>/file/image.png?w=320&h=320"/>
+				<link rel="apple-touch-icon" sizes="76x76" href="<%= apipath %>/get/<%= app.icon %>/file/image.png?w=76&h=76"/>
+				<link rel="apple-touch-icon" sizes="120x120" href="<%= apipath %>/get/<%= app.icon %>/file/image.png?w=120&h=120"/>
+				<link rel="apple-touch-icon" sizes="152x152" href="<%= apipath %>/get/<%= app.icon %>/file/image.png?w=152&h=152"/>
+			<% } %>
+
+		<% } %> 
+
+
+		<% if(app.headerInject && app.headerInject.length) { %>
+			<%- app.headerInject %>
+		<% } %>
+
+		<% if(app.data && app.data.head && app.data.head.length) { %>
+			<%- app.data.head %>
+		<% } %>
+
+
+
+	<$ } else { $>
+		<!-- Use the title from your package.json -->
+		<title><$= VUE_APP_TITLE $></title>
+	<$ } $>
+
+
+	
+
+
+	<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"> -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Material+Icons">
+</head>
+<body>
+	<noscript>
+		<strong>We're sorry but this application doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+	</noscript>
+
+	<div id="app"></div>
+	<!-- built files will be auto injected -->
+
+
+	<$ if(NODE_ENV == 'production') { $>
+		<% if(app.footerInject && app.footerInject.length) { %>
+			<%- app.footerInject %>
+		<% } %>
+
+		<% if(app.data && app.data.foot && app.data.foot.length) { %>
+			<%- app.data.foot %>
+		<% } %>
+	<$ } else { $>
+	<$ } $>
+
+
+</body>
+</html>
