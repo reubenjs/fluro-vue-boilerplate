@@ -1,4 +1,4 @@
-# vue-boiler-plate
+# Fluro Vue Boilerplate
 
 ## Project setup
 Clone this repo
@@ -33,6 +33,10 @@ npm run build
 ### Deploy to Fluro
 You can now commit and push to your own remote git repo. 
 Then create your deployment at https://admin.fluro.io/deployment
+
+After deployment you can create instances of your app from
+the admin panel
+https://admin.fluro.io/application
 
 Happy coding!
 
