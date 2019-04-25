@@ -1,17 +1,14 @@
 <template>
-    <v-navigation-drawer class="main-menu" v-model="drawer" fixed app v-bind="{[`stateless`]: !isMobile}" floating light :mini-variant="collapsed">
+    <!-- fixed app stateless floating light -->
+    <v-navigation-drawer class="main-menu" v-model="drawer" dark :temporary="mobile" :mini-variant="drawerMini" fixed app stateless light>
+        <!-- <v-navigation-drawer class="main-menu" v-model="drawer"> -->
         <v-toolbar class="elevation-0">
             <v-toolbar-title>
-                <v-toolbar-side-icon @click.stop="toggle()">
-                    <!-- <v-icon v-if="isMobile">close</v-icon> -->
-                    <!-- <v-icon v-if="!isMobile">navicon</v-icon> -->
-                </v-toolbar-side-icon>
-                <!-- <span>Fluro Photos</span> -->
+                <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon>
             </v-toolbar-title>
         </v-toolbar>
         <v-list fill-height column>
-            <!-- <pre>{{definitions}}</pre> -->
-            <template v-for="item in menuitems">
+            <template v-for="item in menuItems">
                 <v-layout v-if="item.heading" :key="item.heading" row align-center>
                     <v-flex xs6>
                         <v-subheader v-if="item.heading">
@@ -22,68 +19,43 @@
                         <a href="#!" class="body-2 black--text">EDIT</a>
                     </v-flex>
                 </v-layout>
-
-
-                <template v-else-if="item.children && item.children.length">
-                    
-                    <template v-if="item.meta.mini && collapsed">
-                        <v-list-tile :key="item.text" :to="{ name: item.route, params:item.routeParams}" active-class>
-                            <!-- @click="item.click()"> -->
-                            <v-list-tile-action>
-                                <font-awesome-icon right :icon="['fas', item.icon]" />
-                            </v-list-tile-action>
-                            <v-list-tile-content>
-                                <v-list-tile-title>
-                                    {{ item.text }}
-                                </v-list-tile-title>
-                            </v-list-tile-content>
-                        </v-list-tile>
-                    </template>
-
-                    <template v-if="!item.meta.mini && !collapsed">
-                        <v-list-group :key="item.text" v-model="item.model">
-                            <template v-slot:activator>
-                                <v-list-tile>
-                                    <v-list-tile-action>
-                                        <font-awesome-icon right :icon="['fas', item.icon]" />
-                                    </v-list-tile-action>
-                                    <v-list-tile-content>
-                                        <v-list-tile-title>
-                                            {{ item.text }}
-                                        </v-list-tile-title>
-                                    </v-list-tile-content>
-                                </v-list-tile>
-                            </template>
-                            
-                            <v-list-tile v-for="(child, i) in item.children" :key="i" :to="{ name: child.route, query:child.routeParams}">
-                                <v-list-tile-action v-if="child.icon">
-                                    <font-awesome-icon right :icon="['fas', child.icon]" />
+                <template v-if="item.children && item.children.length">
+                    <v-list-group :key="item.text" v-model="item.model">
+                        <template v-slot:activator>
+                            <v-list-tile>
+                                <v-list-tile-action>
+                                    <font-awesome-icon right :icon="['fas', item.icon]" />
                                 </v-list-tile-action>
                                 <v-list-tile-content>
                                     <v-list-tile-title>
-                                        {{ child.text }}
-                                        <pre>{{child}}</pre>
+                                        {{ item.text }}
                                     </v-list-tile-title>
                                 </v-list-tile-content>
                             </v-list-tile>
-                            <v-list-tile exact v-if="item.route" :key="item.text" :to="{ name: item.route, params:item.routeParams}">
-                                <v-list-tile-content>
-                                    <v-list-tile-title>
-                                        All {{item.text}}
-                                        <!-- {{ item.text }} -->
-                                    </v-list-tile-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-                        </v-list-group>
-                    </template>
+                        </template>
+                        <v-list-tile v-for="(child, i) in item.children" :key="i" :to="{ name: child.route, query:child.routeParams}">
+                            <v-list-tile-action v-if="child.icon">
+                                <font-awesome-icon right :icon="['fas', child.icon]" />
+                            </v-list-tile-action>
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    {{ child.text }}
+                                    <pre>{{child}}</pre>
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                        <v-list-tile exact v-if="item.route" :key="item.text" :to="{ name: item.route, params:item.routeParams}">
+                            <v-list-tile-content>
+                                <v-list-tile-title>
+                                    All {{item.text}}
+                                </v-list-tile-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list-group>
                 </template>
-
-                 <template v-else>
-
+                <template v-else>
                     <template v-if="!item.meta || !item.meta.mini">
                         <v-list-tile :key="item.text" :to="{ name: item.route, params:item.routeParams}" active-class>
-                           <!-- <pre>{{item.children}}</pre> -->
-                            <!-- @click="item.click()"> -->
                             <v-list-tile-action>
                                 <font-awesome-icon right :icon="['fas', item.icon]" />
                             </v-list-tile-action>
@@ -95,98 +67,42 @@
                         </v-list-tile>
                     </template>
                 </template>
-               
             </template>
         </v-list>
     </v-navigation-drawer>
 </template>
 <script>
-import { mapGetters } from 'vuex'
-import _ from 'lodash';
+// import { mapGetters, mapMutations, mapState } from 'vuex';
 
-import ResponsiveMixin from '@/mixins/ResponsiveMixin.js';
+
+import UserMixin from '@/mixins/UserMixin';
+import UIMixin from '@/mixins/UIMixin';
+
+
 
 export default {
-    mixins: [
-        ResponsiveMixin,
-    ],
-    data() {
-
-        var self = this;
-        return {}
-    },
+    mixins: [UserMixin, UIMixin],
     methods: {
         toggle() {
-            if (this.isMobile) {
-                this.toggleDrawer();
-            } else {
-                this.toggleCollapsed();
-            }
+            this.drawer = !this.drawer;
         },
-        toggleCollapsed() {
-            this.$store.commit('drawerCollapsed', !this.$store.state.app.drawerCollapsed);
-        },
-        toggleDrawer() {
-            this.$store.commit('drawer', !this.$store.state.app.drawer);
-        },
-        navigateTo(name) {
-            this.$router.push({
-                name: name,
-            })
-        },
-        logout: function() {
+        logout() {
             this.$fluro.auth.logout();
-        }
+        },
     },
     created() {
-        if (this.isMobile) {
-            this.$store.commit('drawer', false);
-        }
+        //Close on create
+        // this.$store.commit('drawer', false);
     },
     computed: {
-        ...mapGetters([
-            'definitions',
-        ]),
-        menuitems() {
+        mobile() {
+            return this.$vuetify.breakpoint.smAndDown;
+        },
+        menuItems() {
             ///////////////////////////////////////
 
             var menu = [];
             var self = this;
-
-            ///////////////////////////////////////
-
-            // var lookup = {};
-
-            // if (this.definitions.length) {
-            //     //For each definition
-            //     //create a lookup so we can quickly attach
-            //     //the definitions to it without multiple loops
-            //     lookup = _.reduce(this.definitions, function(set, type) {
-            //         set[type.definitionName] = type;
-            //         return set;
-            //     }, {});
-
-            // }
-
-
-
-            ///////////////////////////////////////
-
-            function getChildren(type, routeName) {
-
-                return _.chain(self.definitions)
-                .filter({parentType:type})
-                    .map(function(definition) {
-                        return {
-                            text: definition.plural,
-                            route: routeName,
-                            routeParams: {
-                                definition: definition.definitionName,
-                            },
-                        }
-                    })
-                    .value();
-            }
 
             ///////////////////////////////////////
 
@@ -196,127 +112,53 @@ export default {
                 icon: 'home',
                 text: 'Home',
                 route: 'home',
-                // children: [],
+                children: [],
             })
 
             menu.push({
-                icon: 'clock',
-                text: 'Events',
-                route: 'explore.event',
-                meta: {
-                    mini: false,
-                },
-                children: getChildren('event', 'explore.event'),
+                icon: 'search',
+                text: 'Search',
+                route: 'search',
             })
 
-            menu.push({
-                icon: 'bullseye',
-                text: 'Realms',
-                route: 'explore.realm',
-                meta: {
-                    mini: false,
-                },
-                children: getChildren('realm', 'explore.realm'),
-            })
+            ////////////////////////////////
 
-            menu.push({
-                icon: 'tag',
-                text: 'Tags',
-                route: 'explore.tag',
-                meta: {
-                    mini: false,
-                },
-                children: getChildren('tag', 'explore.tag'),
-            })
+            //If we aren't logged in
+            if (!this.user) {
+                menu.push({
+                    icon: 'sign-in',
+                    text: 'Login',
+                    route: 'user.login',
+                })
 
+                menu.push({
+                    icon: 'user',
+                    text: 'Signup',
+                    route: 'user.signup',
+                })
+            } 
 
+            ////////////////////////////////
 
-            menu.push({
-                icon: 'clock',
-                text: 'Events',
-                route: 'explore.event',
-                meta: {
-                    mini: true,
-                },
-                children: getChildren('event', 'explore.event'),
-            })
+            //If we are logged in
+            if(this.user) {
 
-            menu.push({
-                icon: 'bullseye',
-                text: 'Realms',
-                route: 'explore.realm',
-                meta: {
-                    mini: true,
-                },
-                children: getChildren('realm', 'explore.realm'),
-            })
+                //If we are an actual Fluro user
+                //and not a whitelabelled managed persona
+                if(this.user.accountType != 'managed') {
 
-            menu.push({
-                icon: 'tag',
-                text: 'Tags',
-                route: 'explore.tag',
-                meta: {
-                    mini: true,
-                },
-                children: getChildren('tag', 'explore.tag'),
-            })
+                    //Add a link to the switch accounts page
+                    menu.push({
+                        icon: 'user',
+                        text: 'Switch Accounts',
+                        route: 'user.accounts',
+                    })
+                }
+            }
 
-
-
-
-            menu.push({
-                icon: 'users',
-                text: 'Photographers',
-                route: 'explore.photographer',
-            })
-
-
-
-            // console.log('MENU!', menu)
-
-            // {
-            //     icon: 'keyboard_arrow_up',
-            //     'icon-alt': 'keyboard_arrow_down',
-            //     text: 'More',
-            //     model: false,
-            //     children: [
-            //     {
-            //             icon: 'thumbtack',
-            //             text: 'My Pins',
-            //             click: function() {
-            //                 self.navigateTo('explore.pins')
-            //             }
-            //         },
-
-
-
-            //     ]
-            // },
+            ////////////////////////////////
 
             return menu;
-        },
-        collapsed() {
-            if (this.isMobile) {
-                return false;
-            }
-
-            return this.$store.state.app.drawerCollapsed;
-
-        },
-        drawer: {
-            get() {
-                if (this.isMobile) {
-                    return this.$store.state.app.drawer
-                } else {
-                    return true;
-                }
-            },
-            set(state) {
-                this.$store.commit('drawer', state);
-            }
-        },
-        user() {
-            return this.$store.state.session.user || {};
         },
     },
 
@@ -325,70 +167,4 @@ export default {
 }
 </script>
 <style lang="scss">
-.theme--light.v-navigation-drawer {
-    background-color: #fafafa;
-}
-
-.main-menu {
-    //background-color: #fafafa;
-
-    .v-toolbar__content {
-        padding: 0 0 0 16px !important;
-    }
-
-
-    &.v-navigation-drawer--open {
-        .v-list__group__header__prepend-icon {
-            padding: 0;
-        }
-    }
-
-    .v-list__group__header__prepend-icon {
-        flex: none;
-        display: block;
-
-        i {
-            margin: 0 0 0 15px;
-            width: 48px;
-            height: 48px;
-        }
-    }
-
-    .v-list__group__items {
-        .v-list__tile--link {
-            padding-left: 63px;
-        }
-    }
-
-
-    .v-list {
-        padding: 0;
-        color: #555;
-        font-weight: 700;
-        font-size: 1.1em;
-        //background: #fafafa;
-
-        // .v-list__tile--active {
-        //     color: #ff0066;
-        // }
-
-
-        .v-list__tile__action {
-            width: 48px;
-            min-width: 48px;
-        }
-
-        .v-list__tile__title {
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-    }
-
-
-
-    svg {
-        margin: auto;
-    }
-}
 </style>

@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
+// import createPersistedState from 'vuex-persistedstate'
 
 
 ////////////////////////////////////////
 
 //Modules
-// import counter from './modules/counter';
-import session from './modules/session';
-import app from './modules/app';
+import ui from './modules/ui';
 
 
 //Initiate Vuex
@@ -18,53 +16,29 @@ Vue.use(Vuex)
 
 //Create the store
 const store = new Vuex.Store({
-    plugins: [createPersistedState()],
-    // state:{},
-    // mutations:{},
-    // getters:{},
-    // actions:{},
+
+    //Save state to local storage
+    // plugins: [createPersistedState()],
     modules:{
-      app,
-      session,
+      ui,
     },
-    state: {
-        showInformation:false,
-    //     counter: 0,
-    },
-    mutations: {
-        showInformation(state, data) {
-            state.showInformation = data;
-        },
-    },
-    //     counter(state, data) {
-    //         state.counter = data;
-    //     },
-    // },
-    // getters: {
-    //     user(state) {
-    //         return state.user;
-    //     },
-    //     accessToken(state) {
-    //         if (!state.user) {
-    //             return;
-    //         }
+    ///////////////////////////////////////
 
-    //         return state.user.token;
-    //     },
-    //     refreshToken(state) {
-    //         if (!state.user) {
-    //             return;
-    //         }
+    state:{
+        email: '', //For when someone is logging in/out remember it in forms
+    },
 
-    //         return state.user.refreshToken;
-    //     },
-    // },
-    // actions: {
-    //     logout({commit}) {
-    //       commit('user', null);
-    //     }
-        
-    // }
+    mutations:{
+		email(state, payload) {
+	        state.email = payload;
+	    },
+    },
+    getters:{
+    	email(state, getters) {
+	        return state.email;
+	    },
+    },
+
 })
 
 ///////////////////////////////////////
@@ -76,3 +50,5 @@ Vue.$store = store;
 
 //Export it
 export default store;
+
+

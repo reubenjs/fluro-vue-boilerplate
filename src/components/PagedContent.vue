@@ -6,18 +6,6 @@
 
 			<!-- Scroll to top -->
 			<div ref="top"></div>
-
-			
-
-			<!-- <div v-if="top"> -->
-			<!-- <div class="text-xs-right" v-if="total > 1"> -->
-				
-
-
-				<!-- <v-pagination v-model="currentPage" :total-visible="15" @input="pageChanged()" :length="total"></v-pagination> -->
-			<!-- </div> -->
-		<!-- </div> -->
-
 			<slot v-bind:page="page"></slot>
 			<div class="pager" v-if="total > 1">
 				<v-pagination v-model="currentPage" :total-visible="totalVisible" @input="pageChanged()" :length="total"></v-pagination>
@@ -27,6 +15,9 @@
 </template>
 
 <script>
+
+import _ from 'lodash';
+
 export default {
 	props:{
 		top:{
@@ -70,11 +61,11 @@ export default {
 			return this.availablePages.length;
 		},
 		availablePages() {
-			return this._.chunk(this.items, this.perPage);
+			return _.chunk(this.items, this.perPage);
 		},
 		page() {
 			if(this.currentPage > this.total) {
-				return this._.first(this.availablePages);
+				return _.first(this.availablePages);
 			} else {
 				return this.availablePages[this.currentPage-1];
 			}

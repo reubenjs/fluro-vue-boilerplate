@@ -1,5 +1,4 @@
-import { mapGetters, mapMutations } from 'vuex';
-import _ from 'lodash';
+// import _ from 'lodash';
 
 
 var cached;
@@ -50,9 +49,5 @@ export default {
                 // ...
             ]
         },
-        ...mapGetters([
-            'user',
-            'application',
-        ]),
     }
 }

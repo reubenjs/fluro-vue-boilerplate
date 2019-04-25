@@ -1,90 +1,65 @@
 <template>
     <v-app id="fluro">
+        <main-menu></main-menu>
+        <main-toolbar v-if="!headerDisabled"></main-toolbar>
+        <v-content class="main-content">
+            <router-view />
+        </v-content>
+        <v-footer class="pa-3" v-if="!footerDisabled">
 
-        <login v-if="!authenticated"></login>
-        <application v-if="authenticated"></application>
+            <div class="footer-links">
+                <a href="https://www.fluro.io" target="_blank">Powered by Fluro</a>
+            </div>
+            <v-spacer></v-spacer>
+            <div>&copy; {{ new Date().getFullYear() }}</div>
+        </v-footer>
     </v-app>
 </template>
 <script>
-import Login from './components/Login.vue';
-import Application from './components/layout/Application.vue';
-// import Masthead from './components/Masthead.vue';
-import { mapGetters } from 'vuex'
+//Get the state from our Vuex store
+// import { mapGetters } from 'vuex'
 
+//Get the UI components
+import MainMenu from '@/components/layout/MainMenu.vue';
+import MainToolbar from '@/components/layout/MainToolbar.vue';
 
+//Include our SEO Mixin
+import SEOMixin from '@/mixins/SEOMixin';
+import UserMixin from '@/mixins/UserMixin';
+
+////////////////////////////////
 
 export default {
     components: {
-        login: Login,
-        application: Application,
+        MainMenu,
+        MainToolbar,
     },
+    mixins: [SEOMixin, UserMixin],
     computed: {
-        ...mapGetters([
-            'user',
-            'application',
-        ]),
+        footerDisabled() {
+            var self = this;
+            return _.get(self, '$route.meta.disableHeader');
+        },
+        headerDisabled() {
+            var self = this;
+            return _.get(self, '$route.meta.disableFooter');
+        },
         authenticated() {
 
+            //Returns true if we are running as an app or logged in as a user
             var isUser = (this.user);
             var isApplication = (this.application && this.application.authenticationStyle == 'application');
+            
             if (isUser || isApplication) {
                 return true;
             }
 
+            //We're not authenticated at all
             return false;
         }
     },
-    methods: {},
-    created() {
-
-        // if (this.user) {
-        //     this.$toasted.show(`Welcome back ${this.user.firstName}!`, {
-        //         // icon: 'smiley'
-        //     })
-        // }
-
-
-
-        //   /////////////////////////////////////////////////////
-
-
-        // //   var instance= this;
-        //   console.log('GET API USER', this.$fluro)
-        //   var promise = this.$fluro.api.get('session');
-
-        // //   //////////////////////////////////
-
-        //   promise.then(refreshSuccess, refreshFailed);
-
-        // //   //////////////////////////////////
-
-        //   function refreshSuccess(res) {
-
-        // //     var currentUser = instance.$store.session.user;
-        //     console.log('SERVER USER', res);
-
-        // //     instance.$store.commit('user', res.data);
-        //   }
-
-        // //   //////////////////////////////////
-
-        //   function refreshFailed(err) {
-        //     console.log('ERROR!', err);
-        // //     instance.$store.dispatch('logout');
-        //   }
-
-
-
-
-    },
-
 }
 </script>
 <style lang="scss">
 @import '@/styles/index.scss';
-
-// /* Remove in 1.2 */
-// .v-datatable thead th.column.sortable i {
-//   vertical-align: unset;
-// }
 </style>

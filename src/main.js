@@ -8,16 +8,14 @@ import store from './store'
 
 Vue.config.productionTip = false
 
-///////////////////////////////////////
-
-//Include Lodash, and add it globally because it's awesome
-import _ from 'lodash';
-Vue.prototype._ = _;
 
 /////////////////////////////////////////////////////
 
-import Fluro from 'fluro-vue';
-Vue.use(Fluro, { store });
+import FluroVue from 'fluro-vue';
+Vue.use(FluroVue, { store });
+
+
+/////////////////////////////////////////////////////
 
 //Listen for when the user session changes
 var fluro = Vue.prototype.$fluro;
@@ -25,43 +23,59 @@ fluro.auth.addEventListener('change', userUpdated);
 
 /////////////////////////////////////////////////////
 
+//Keep track of whether the user is logged in
+var previousLoggedInUser;
+
+//Everytime the user changes
 function userUpdated(user) {
-    // var user = fluro.auth.getCurrentUser();
-    store.commit('user', user);
 
+    //Check if the user was logged in before this change
+    var wasLoggedInAs = previousLoggedInUser;
 
-    /////////////////////////////////////////////////////
-
-    function loadRelevantDefinitions() {
-        //Retrieve the definitions from this account
-        //that are relevant for this app eg. defined realms, events, tags etc
-        //and store them with vuex so we can use their titles in the menu
-        fluro.types.retrieve([
-            'image',
-            'realm',
-            'tag',
-            'event',
-        ], { flat: true }).then(function(res) {
-            store.commit('definitions', res.data);
-        });
-    }
-
-    /////////////////////////////////////////////////////
-
-    //If there is no user
-    //then we don't have any definitions
     if (user) {
-        loadRelevantDefinitions();
+        //We are authenticated as a user
+        previousLoggedInUser = user;
     } else {
 
-        //If there is an app
+        //We are not logged in
+        previousLoggedInUser = null;
+
+
         if (fluro.applicationToken) {
-            loadRelevantDefinitions();
+            //We are authenticated as a static application
         } else {
-            store.commit('definitions', {});
+            //We are not authenticated at all
+        }
+
+        //If we were logged in before
+        //and now we aren't
+        if (wasLoggedInAs) {
+
+            self.$toasted.show(`Bye ${wasLoggedInAs.firstName}!`, {
+                // icon:'check'
+                duration: 3500,
+                type: 'success',
+            })
+
+
+            //Redirect to the home page
+            router.push({ name: 'home' });
+            
+
         }
     }
 }
+
+/////////////////////////////////////////////////////
+
+import createPersistedState from 'vuex-persistedstate'
+//Add local storage persistence to vuex
+//We need to do this after FluroVue has been installed
+//Because it dynamically registers it's own vuex store module
+createPersistedState()(store);
+
+
+
 
 ///////////////////////////////////////
 
@@ -69,9 +83,6 @@ function userUpdated(user) {
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
 
-//Helper for local fuzzy search in javascript
-import VueFuse from 'vue-fuse';
-Vue.use(VueFuse)
 
 //Helper for SEO, Page title and meta tags
 import VueHead from 'vue-head'
@@ -101,8 +112,10 @@ Vue.use(VueAnalytics, {
 ///////////////////////////////////////
 
 //Include the AsyncComputed Plugin
+//because it makes life easy!
 import AsyncComputed from 'vue-async-computed'
 Vue.use(AsyncComputed)
+
 
 //Include Toast notifications
 import Toasted from 'vue-toasted';
@@ -141,7 +154,6 @@ Vue.use(Toasted, {
 //////////////////////////////////////
 
 //Use Font Awesome
-
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/pro-solid-svg-icons'
@@ -155,16 +167,6 @@ import Vuetify from 'vuetify'
 Vue.use(Vuetify, {
     iconfont: 'far'
 });
-//         'arrow-left': {
-//             component: FontAwesomeIcon,
-//             props: {
-//                 icon: ['far', 'arrow-left']
-//             }
-//         }
-//     }
-// })
-
-
 
 
 ///////////////////////////////////////

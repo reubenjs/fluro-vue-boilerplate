@@ -1,28 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './routes/Home.vue'
-import Accounts from './routes/Accounts.vue'
-import Latest from './routes/Latest.vue'
-import Realm from './routes/Realm.vue'
-import Photographer from './routes/Photographer.vue'
-import ExplorePhotographer from './routes/ExplorePhotographer.vue'
-import ExploreEvent from './routes/ExploreEvent.vue'
-import ExploreRealm from './routes/ExploreRealm.vue'
-import ExploreTag from './routes/ExploreTag.vue'
-import ExploreKeyword from './routes/ExploreKeyword.vue'
-import Event from './routes/Event.vue'
-import Tag from './routes/Tag.vue'
-import Keyword from './routes/Keyword.vue'
 import Search from './routes/Search.vue'
-import Pinned from './routes/Pinned.vue'
-import UploadSelect from './routes/UploadSelect.vue'
-import UploadPanel from './routes/UploadPanel.vue'
-// import Home from './routes/Home.vue'
-// import Photo from './routes/Photo.vue'
-import _ from 'lodash';
+import store from '../store'
 
 ///////////////////////////////////
 
+//User Authentication Routes
+import UserLogin from './routes/UserLogin.vue'
+import UserSignup from './routes/UserSignup.vue'
+import UserForgot from './routes/UserForgot.vue'
+import UserReset from './routes/UserReset.vue'
+import UserAccounts from './routes/UserAccounts.vue'
 
 ///////////////////////////////////
 
@@ -31,11 +20,16 @@ Vue.use(Router)
 
 ///////////////////////////////////
 
-//Create an event bus so we can reuse the search bar on different routes
+//Create an event bus so we can reuse the search bar in the toolbar for different routes
 var $globalSearch = new Vue();
 Vue.prototype.$globalSearch = $globalSearch;
 
 ///////////////////////////////////
+
+
+
+///////////////////////////////////
+
 
 var array = [];
 
@@ -53,56 +47,64 @@ array.push({
     })
 })
 
+//////////////////////////////////////
+
 array.push({
-    name: 'upload',
-    path: '/upload',
+    name: 'user.login',
+    path: '/user/login',
     meta: {
-        title: 'Upload',
+        title: 'Login',
+        denyUser: true,
+        search: {
+            disabled: true,
+        }
     },
-    component: UploadSelect,
-    // meta: {
-    //     search: {
-    //         label: 'Search events',
-    //         component: $globalSearch,
-    //     }
-    // },
+    component: UserLogin,
 })
 
-
-
 array.push({
-    name: 'upload.event',
-    path: '/upload/:id',
+    name: 'user.signup',
+    path: '/user/signup',
     meta: {
-        title: 'Upload',
+        title: 'Signup',
+        denyUser: true,
+        search: {
+            disabled: true,
+        }
     },
-    component: UploadPanel,
+    component: UserSignup,
 })
 
-
-// array.push({
-//     name:'home',
-//     path: '/',
-//     title: 'Latest',
-//     component: Latest,
-//     props: (route) => ({
-//         photo:route.query.photo,
-//     })
-// })
+array.push({
+    name: 'user.forgot',
+    path: '/user/forgot',
+    meta: {
+        title: 'Forgot Password',
+        denyUser: true,
+        search: {
+            disabled: true,
+        }
+    },
+    component: UserForgot,
+})
 
 array.push({
-    name: 'latest',
-    path: '/latest',
+    name: 'user.reset',
+    path: '/user/reset',
     meta: {
-        title: 'Latest Photos',
+        title: 'Reset Your Password',
+        denyUser: true,
+        disableHeader:true,
+        disableFooter:true,
+        search: {
+            disabled: true,
+        }
     },
-    component: Latest,
+    component: UserReset,
     props: (route) => ({
-        photo: route.query.photo,
-        definition: route.query.definition,
+        token: route.query.token,
     })
 })
-
 
 array.push({
     name: 'user.accounts',
@@ -110,14 +112,19 @@ array.push({
     meta: {
         title: 'My Accounts',
     },
-    component: Accounts,
+    component: UserAccounts,
     meta: {
+        requireUser: true,
         search: {
-            label: 'Search accounts',
-            component: $globalSearch,
+            disabled: true,
+            //         label: 'Search accounts',
+            //         component: $globalSearch,
         }
     },
 })
+
+//////////////////////////////////////
+
 
 array.push({
     name: 'search',
@@ -133,188 +140,65 @@ array.push({
     })
 })
 
-
-array.push({
-    name: 'explore.event',
-    path: '/event',
-    meta: {
-        title: 'Events',
-    },
-    component: ExploreEvent,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'event',
-    path: '/event/:id',
-    meta: {
-        title: 'Event',
-    },
-    component: Event,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        photo: route.query.photo,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'explore.tag',
-    path: '/tag',
-    meta: {
-        title: 'Tags',
-    },
-    component: ExploreTag,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        definition: route.query.definition,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'tag',
-    path: '/tag/:id',
-    meta: {
-        title: 'Tag',
-    },
-    component: Tag,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        photo: route.query.photo,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'explore.keyword',
-    path: '/keyword',
-    meta: {
-        title: 'Keywords',
-    },
-    component: ExploreKeyword,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        definition: route.query.definition,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'keyword',
-    path: '/keyword/:id',
-    meta: {
-        title: 'Keyword',
-    },
-    component: Keyword,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        photo: route.query.photo,
-        definition: route.query.definition,
-    })
-})
-
-
-// array.push({
-//     name: 'explore.pins',
-//     path: '/pins',
-//     title: 'Pinned',
-//     component: Pinned,
-//     props: (route) => ({
-//         currentPage: parseInt(route.query.page) || 1,
-//         photo: route.query.photo,
-//     })
-// })
-
-
-
-array.push({
-    name: 'explore.realm',
-    path: '/realm',
-    meta: {
-        title: 'Realms',
-    },
-    component: ExploreRealm,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        definition: route.query.definition,
-    })
-})
-
-
-array.push({
-    name: 'realm',
-    path: '/realm/:id',
-    meta: {
-        title: 'Realm',
-    },
-    component: Realm,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        photo: route.query.photo,
-    })
-})
-
-array.push({
-    name: 'explore.photographer',
-    path: '/photographer',
-    meta: {
-        title: 'Photographers',
-    },
-    component: ExplorePhotographer,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-    })
-})
-
-
-array.push({
-    name: 'photographer',
-    path: '/photographer/:id',
-    meta: {
-        title: 'Photographer',
-    },
-    component: Photographer,
-    props: (route) => ({
-        currentPage: parseInt(route.query.page) || 1,
-        photo: route.query.photo,
-    })
-})
-
-// array.push({
-//     name:'photo',
-//     path: '/photo/:id',
-//     title: 'Photo',
-//     component: Photo,
-// })
-
-
-
 ///////////////////////////////////
 
-export default new Router({
+var router = new Router({
     mode: 'history',
     routes: array,
     scrollBehavior(to, from, savedPosition) {
 
-        // console.log('PreviousPositon', to, from, savedPosition);
+        //Keep track of where the user was scrolled
+        //if they hit the back button
         var pos = 0;
         // Scroll to the top
         if (savedPosition) {
             pos = savedPosition.y;
         }
         document.body.scrollTop = document.documentElement.scrollTop = pos;
+    },
+});
 
+///////////////////////////////////
 
+router.beforeEach((to, from, next) => {
+    //Close the drawer whenever we change route
+    store.commit('ui/drawer', false)
+
+    if (to.meta) {
+        //Get the user session from fluro
+        var user = store.getters['fluro/user'];
+
+        //If the route doesn't allow logged in users
+        if(to.meta.requireUser) {
+            if(user) {
+                return next();
+            }
+
+            console.log('Route is only accessible to logged in users')
+            return next('/user/login')
+        }
+
+        //If the route only allows logged in users
+        if(to.meta.denyUser) {
+            if(!user) {
+                return next();
+            }
+
+            console.log('Route is not accessible to logged in users')
+            return next('/')
+        }
     }
+
+
+    return next();
 })
+
+
+
+
+
+///////////////////////////////////
+
+export default router;
 
 ///////////////////////////////////

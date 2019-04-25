@@ -1,49 +1,43 @@
 <template>
     <v-toolbar class="main-toolbar elevation-0" app fixed>
-        <!-- style="width: 300px" class="ml-0 pl-3" -->
         <v-toolbar-title>
-            <div class="hidden-sm-and-down">
-                {{title}}
-            </div>
-            <!--" -->
-            <v-toolbar-side-icon class="hidden-md-and-up" @click.stop="toggleDrawer()"></v-toolbar-side-icon>
+            <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon>
+            <router-link :to="{name:'home'}">
+            <span class="hidden-sm-and-down">{{title}}</span>
+            </router-link>
         </v-toolbar-title>
         <div class="search-wrapper">
-            <v-text-field flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
+            <transition name="fade">
+                <v-text-field v-if="!searchDisabled" flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
+            </transition>
         </div>
-        <div v-if="canUpload">
-            <v-btn color="success" :to="{name:'upload'}">
-                <span>Upload</span>
-                <font-awesome-icon right :icon="['far', 'arrow-up']" />
-
-            </v-btn>
-        </div>
+        <v-toolbar-items v-if="!user" class="hidden-xs-only">
+            <router-link :ripple="false" :to="{name:'user.login'}">Login</router-link>
+            <router-link :ripple="false" :to="{name:'user.signup'}">Signup</router-link>
+        </v-toolbar-items>
         <v-menu v-if="user" :nudge-width="250" :nudge-bottom="5" offset-y>
             <template v-slot:activator="{ on }">
                 <div v-on="on" style="margin-left: 15px;">
-                    <fluro-avatar slot="activator" class="md" :id="user._id" type="user"></fluro-avatar>    
+                    <fluro-avatar slot="activator" class="md" :id="user.persona" type="persona"></fluro-avatar>    
                 </div>
             </template>
             <v-card tile>
                 <v-list>
                     <v-list-tile avatar>
                         <v-list-tile-avatar>
-                            <fluro-avatar slot="activator" class="xl" :id="user._id" type="user"></fluro-avatar>
+                            <fluro-avatar slot="activator" class="xl" :id="user.persona" type="persona"></fluro-avatar>
                         </v-list-tile-avatar>
                         <v-list-tile-content>
                             <v-list-tile-title>{{user.firstName}} {{user.lastName}}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{user.account.title}}</v-list-tile-sub-title>
-                            <!-- <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title> -->
+                            <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title>
                         </v-list-tile-content>
                     </v-list-tile>
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
-                    <v-list-tile active-class router-link-exact-active :to="{ name: 'user.accounts'}">
+                    <v-list-tile v-if="user.accountType != 'managed'"active-class router-link-exact-active :to="{ name: 'user.accounts'}">
                         <v-list-tile-title>Switch Account</v-list-tile-title>
                     </v-list-tile>
-                    <!-- <v-list-tile> -->
-                    <!-- </v-list-tile> -->
                     <v-list-tile @click="logout()">
                         <v-list-tile-title>Logout</v-list-tile-title>
                     </v-list-tile>
@@ -54,14 +48,15 @@
 </template>
 <script>
 import _ from 'lodash';
-import { mapGetters } from 'vuex'
+
+import UserMixin from '@/mixins/UserMixin';
+import UIMixin from '@/mixins/UIMixin';
+
 
 export default {
-    // props:['items'],
+    mixins: [UIMixin, UserMixin],
     data() {
-
         var initialKeywords = this.$route.query.keywords || '';
-
         return {
             keywords: initialKeywords,
         }
@@ -81,30 +76,23 @@ export default {
         routeChange(to, from) {
             var self = this;
 
-            if (self.isMobile) {
-                self.closeDrawer();
-            }
-
+            //Clear the search if we aren't navigating to the /search page
             if (to.name != 'search') {
-
                 if (self.keywords && self.keywords.length) {
                     self.keywords = null;
                 }
-
             }
         },
-        toggleDrawer() {
-            this.$store.commit('drawer', !this.$store.state.app.drawer);
-        },
-        closeDrawer() {
-            this.$store.commit('drawer', false);
+        toggle() {
+            this.drawer = !this.drawer;
+            // this.$store.commit('app/drawer', !this.drawer);
         },
         searchFocus() {
-
-            if(this.routeSearch) {
+            if (this.routeSearch) {
                 return;
             }
 
+            //Change the route to the /search page
             this.$router.push({
                 name: 'search',
                 query: {
@@ -113,31 +101,22 @@ export default {
             })
         },
         logout: function() {
-
-            var self = this;
-            var user = this.user;
-
+            //Logout
             this.$fluro.auth.logout();
-            self.$toasted.show(`See you next time!`, {
-                // icon:'check'
-                duration:2000,
-                type:'success',
-            })
-
         },
         keywordsChanged: _.debounce(function(keywords) {
-            //console.log('Search activated')
+            //When the user has finished typing submit the search
             this.submit();
+
         }, 500),
-
         submit() {
-
             //If the search should be context sensitive to the page its on
-            if(this.routeSearch) {
+            if (this.routeSearch) {
                 //Fire an event so the route can hear it
                 return this.routeSearch.component.$emit('search', this.keywords);
             }
 
+            //Otherwise we want to change the route to the search results page
             if (this.keywords && this.keywords.length) {
                 this.$router.push({
                     query: {
@@ -145,29 +124,28 @@ export default {
                     }
                 })
             } else {
-                this.$router.push({ query: {} })
+                //Go to the search page with no results
+                this.$router.replace({ query: {} })
             }
-
         }
     },
     computed: {
-        ...mapGetters([
-            'application',
-            'user',
-        ]),
-        canUpload() {
-            if(_.startsWith(this.$route.name, 'upload')) {
-                return;
-            }
-            return this.$fluro.access.can('create', 'photo', 'image');
+        mobile() {
+
+            return this.$vuetify.breakpoint.smAndDown;
+        },
+        searchDisabled() {
+            var disabled = _.get(this, '$route.meta.search.disabled');
+            return disabled;
         },
         routeSearch() {
             return _.get(this, '$route.meta.search');
         },
         searchLabel() {
+            var label = 'Search';
 
-            var label = 'Search for photos';
-            if(this.routeSearch) {
+            //If the route has a better description use that
+            if (this.routeSearch) {
                 label = this.routeSearch.label;
             }
 
@@ -175,37 +153,86 @@ export default {
         },
         title() {
 
-            //console.log(this);
-            if (this.user) {
-                return this.user.account.title;
-            }
+            // //console.log(this);
+            // if (this.user) {
+            //     return this.user.account.title;
+            // }
 
             if (this.application) {
                 return this.application.title;
             }
 
-        },
-        isMobile() {
-            switch (this.$vuetify.breakpoint.name) {
-                case 'xs':
-                    return true;
-                    break;
-            }
-        },
-        allowUpload() {
-            return this.$route.name != 'search';
+            return 'Fluro';
+
         },
     }
 }
 </script>
 <style lang="scss">
+$toolbar-height: 48px;
+
+
+.fade-enter-active {
+    transition: all .3s ease;
+}
+
+.fade-leave-active {
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.fade-enter,
+.fade-leave-to {
+    opacity: 0;
+}
+
+
+
 .theme--light.v-toolbar {
-    background: #fafafa;
+    background: #fff;
+    border-bottom: 1px solid rgba(#000, 0.05);
+    vertical-align: top;
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
 
     .v-toolbar__title {
         font-weight: 700;
-        letter-spacing: -0.02em;
+        letter-spacing: 0.05em;
+        font-size: 13px;
+        line-height: $toolbar-height;
         padding-right: 15px;
+        text-transform: uppercase;
+        color: inherit;
+        text-decoration: none;
+
+    }
+
+    .v-toolbar__items {
+        align-items: center;
+        justify-content: center;
+
+        a {
+            text-decoration: none;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: inherit;
+            line-height: $toolbar-height;
+            padding: 0 15px;
+            height: $toolbar-height;
+            font-size: 13px;
+        }
+    }
+
+    .logo {
+        width: $toolbar-height;
+        height: $toolbar-height;
+        padding: 1px;
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 10px;
     }
 }
 
@@ -219,7 +246,6 @@ export default {
 .mainsearch {
     flex: 1;
     max-width: 450px;
-
 
     &.theme--light.v-text-field--solo>.v-input__control {
 

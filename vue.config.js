@@ -15,8 +15,7 @@ switch(process.env.NODE_ENV) {
 	case 'development':
 		// process.env.VUE_APP_FLURO_ENV = 'local';
 		process.env.VUE_APP_FLURO_ENV = 'staging';
-		process.env.VUE_APP_REMOTE_URL = 'https://photos.fluro.io';
-		// process.env.VUE_APP_REMOTE_URL = 'http://try.yourstaticsite.com';
+		process.env.VUE_APP_REMOTE_URL = 'https://developers.fluro.io';
 	break;
 	default:
 		process.env.VUE_APP_FLURO_ENV = 'production';
