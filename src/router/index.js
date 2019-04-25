@@ -20,9 +20,9 @@ Vue.use(Router)
 
 ///////////////////////////////////
 
-//Create an event bus so we can reuse the search bar in the toolbar for different routes
-var $globalSearch = new Vue();
-Vue.prototype.$globalSearch = $globalSearch;
+// //Create an event bus so we can reuse the search bar in the toolbar for different routes
+// var $globalSearch = new Vue();
+// Vue.prototype.$globalSearch = $globalSearch;
 
 ///////////////////////////////////
 
@@ -117,8 +117,6 @@ array.push({
         requireUser: true,
         search: {
             disabled: true,
-            //         label: 'Search accounts',
-            //         component: $globalSearch,
         }
     },
 })

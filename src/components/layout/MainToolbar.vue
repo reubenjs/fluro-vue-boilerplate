@@ -3,7 +3,7 @@
         <v-toolbar-title>
             <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon>
             <router-link :to="{name:'home'}">
-            <span class="hidden-sm-and-down">{{title}}</span>
+                <span class="hidden-sm-and-down">{{title}}</span>
             </router-link>
         </v-toolbar-title>
         <div class="search-wrapper">
@@ -35,7 +35,7 @@
                 </v-list>
                 <v-divider></v-divider>
                 <v-list>
-                    <v-list-tile v-if="user.accountType != 'managed'"active-class router-link-exact-active :to="{ name: 'user.accounts'}">
+                    <v-list-tile v-if="user.accountType != 'managed'" active-class router-link-exact-active :to="{ name: 'user.accounts'}">
                         <v-list-tile-title>Switch Account</v-list-tile-title>
                     </v-list-tile>
                     <v-list-tile @click="logout()">
@@ -92,13 +92,13 @@ export default {
                 return;
             }
 
-            //Change the route to the /search page
-            this.$router.push({
-                name: 'search',
-                query: {
-                    keywords: this.keywords,
-                }
-            })
+            // //Change the route to the /search page
+            // this.$router.push({
+            //     name: 'search',
+            //     query: {
+            //         keywords: this.keywords,
+            //     }
+            // })
         },
         logout: function() {
             //Logout
@@ -110,22 +110,24 @@ export default {
 
         }, 500),
         submit() {
-            //If the search should be context sensitive to the page its on
-            if (this.routeSearch) {
-                //Fire an event so the route can hear it
-                return this.routeSearch.component.$emit('search', this.keywords);
-            }
 
-            //Otherwise we want to change the route to the search results page
-            if (this.keywords && this.keywords.length) {
-                this.$router.push({
-                    query: {
-                        keywords: this.keywords
-                    }
-                })
+            //If we are already on the search page
+            if (this.$route.name == 'search') {
+
+                //Replace the parameters without adding a new route to history
+                // console.log('Replace current search with', this.keywords);
+                if (this.keywords && this.keywords.length) {
+                    this.$router.replace({ query: Object.assign({}, this.$route.query, { keywords: this.keywords }) });
+                } else {
+                    this.$router.back();
+                }
             } else {
-                //Go to the search page with no results
-                this.$router.replace({ query: {} })
+                //Change the route and add item to history (for back button)
+                // console.log('Navigate to search', this.keywords);
+                if (this.keywords && this.keywords.length) {
+                    this.$router.push({ name: 'search', query: { keywords: this.keywords } });
+                }
+
             }
         }
     },
