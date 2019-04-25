@@ -58,10 +58,7 @@ npm run lint
 ### Extra Options and Included Dependencies
 
 
-#### Vuetify
-- This boilerplate includes the [Vuetify](https://vuetifyjs.com/en/getting-started/quick-start) UI Library. Feel free to remove it and use another library of your choice
-
-#### Font Awesome
-- If you want to use the FontAwesome Pro libraries, add your license number into the `.npmrc` file 
+- [Vuetify](https://vuetifyjs.com/en/getting-started/quick-start) UI Library. Feel free to remove it and use another library of your choice
+- [FontAwesome](https://fontawesome.com/) If you want to use the Pro icons add your license number into the `/.npmrc` file 
 
 
