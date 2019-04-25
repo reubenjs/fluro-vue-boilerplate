@@ -19,6 +19,10 @@
                         Create an application in Fluro and Update the VUE_APP_REMOTE_URL in the 'vue.config.js' file variable to match it's domain
                     </li>
                     <li>
+                        <strong>Allow Origin</strong><br/>
+                        Make sure to add 'http://localhost:8080' as an Allowed Origin in your Application settings so that you can authenticate while you're developing
+                    </li>
+                    <li>
                         <strong>Font Awesome Icons</strong><br/>
                         If you want to use the FontAwesome Pro Library update the '.npmrc' file with your license number
                     </li>
