@@ -1,6 +1,7 @@
 {
   "name": "vue-fluro-basic-boilerplate",
   "title": "Fluro Boilerplate",
+  "description": "An awesome new App",
   "version": "0.1.0",
   "private": true,
   "scripts": {
