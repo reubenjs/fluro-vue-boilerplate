@@ -59,7 +59,7 @@ export default {
 
             //Get the image defined on the route
             var routeImageURL = _.get(self, '$route.meta.image');
-            var iconImageURL = `${this.$fluro.domain || window.location.hostname}/fluro/image?w=600`;
+            var iconImageURL = `${window.location.protocol}//${window.location.hostname}/fluro/image?w=600`;
            
             ///////////////////////////////////////////////////
 
