@@ -7,6 +7,7 @@ import { getField, updateField } from 'vuex-map-fields';
 const state = {
     drawer: false,
     drawerMini: false,
+    
 }
 
 ///////////////////////////////////
@@ -16,6 +17,8 @@ const mutations = {
     drawer(state, payload) {
         state.drawer = payload;
     },
+    
+
     // drawer(state, payload) {
     //     state.drawer = payload;
     // },
@@ -34,6 +37,7 @@ const getters = {
     drawer(state, getters) {
         return state.drawer;
     },
+    
     // drawer(state) {
     //     return state.drawer;
     // },

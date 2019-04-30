@@ -189,7 +189,7 @@ $toolbar-height: 48px;
 
 
 
-.theme--light.v-toolbar {
+.main-toolbar.v-toolbar {
     background: #fff;
     border-bottom: 1px solid rgba(#000, 0.05);
     vertical-align: top;
@@ -236,38 +236,40 @@ $toolbar-height: 48px;
         vertical-align: middle;
         margin-right: 10px;
     }
-}
-
-.search-wrapper {
-    flex: 1;
-    text-align: center;
-    justify-content: center;
-    display: flex;
-}
-
-.mainsearch {
-    flex: 1;
-    max-width: 450px;
-
-    &.theme--light.v-text-field--solo>.v-input__control {
 
 
-        @media(max-width: 768px) {
-            min-height: 36px;
-        }
+    .search-wrapper {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+        display: flex;
+    }
 
-        &>.v-input__slot {
-            transition: all 0.3s;
-            border-radius: 5px;
-            overflow: hidden;
-            background: darken(#f1f3f4, 2%);
+    .mainsearch {
+        flex: 1;
+        max-width: 450px;
+
+        &.theme--light.v-text-field--solo>.v-input__control {
 
 
-            &.v-input--is-focused.theme--light.v-text-field--solo>.v-input__control>.v-input__slot {
-                background: #fff;
-                box-shadow: 0 3px 5px rgba(#000, 0.2);
+            @media(max-width: 768px) {
+                min-height: 36px;
+            }
+
+            &>.v-input__slot {
+                transition: all 0.3s;
+                border-radius: 5px;
+                overflow: hidden;
+                background: darken(#f1f3f4, 2%);
+
+
+                &.v-input--is-focused.theme--light.v-text-field--solo>.v-input__control>.v-input__slot {
+                    background: #fff;
+                    box-shadow: 0 3px 5px rgba(#000, 0.2);
+                }
             }
         }
     }
+
 }
 </style>

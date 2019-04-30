@@ -14,6 +14,9 @@ Vue.config.productionTip = false
 import FluroVue from 'fluro-vue';
 Vue.use(FluroVue, { store });
 
+//Include the Fuse fuzzy searching library
+import VueFuse from 'vue-fuse'
+Vue.use(VueFuse)
 
 /////////////////////////////////////////////////////
 
