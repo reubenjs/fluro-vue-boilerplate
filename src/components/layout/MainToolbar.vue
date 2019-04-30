@@ -1,7 +1,10 @@
 <template>
     <v-toolbar class="main-toolbar elevation-0" app fixed>
         <v-toolbar-title>
-            <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon>
+            <v-btn icon @click.stop="toggle()">
+                <v-icon>{{this.drawer ? 'first_page' : 'menu' }}</v-icon>
+            </v-btn>
+            <!-- <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon> -->
             <router-link :to="{name:'home'}">
                 <span class="hidden-sm-and-down">{{title}}</span>
             </router-link>
@@ -190,6 +193,7 @@ $toolbar-height: 48px;
 
 
 .main-toolbar.v-toolbar {
+    z-index:10;
     background: #fff;
     border-bottom: 1px solid rgba(#000, 0.05);
     vertical-align: top;

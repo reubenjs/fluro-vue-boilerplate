@@ -19,7 +19,7 @@ switch(process.env.NODE_ENV) {
 		process.env.VUE_APP_REMOTE_URL = 'https://boilerplate.fluro.io';
 	break;
 	default:
-		process.env.VUE_APP_FLURO_ENV = 'production';
+		process.env.VUE_APP_FLURO_ENV = 'staging';
 		process.env.VUE_APP_REMOTE_URL = '';
 	break;
 }

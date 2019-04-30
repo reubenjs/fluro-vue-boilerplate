@@ -167,4 +167,8 @@ export default {
 }
 </script>
 <style lang="scss">
+
+.main-menu {
+    z-index: 20;
+}
 </style>
