@@ -2,7 +2,7 @@
     <v-toolbar class="main-toolbar elevation-0" app fixed>
         <v-toolbar-title>
             <v-btn icon @click.stop="toggle()">
-                <v-icon>{{this.drawer ? 'first_page' : 'menu' }}</v-icon>
+                <v-icon>{{this.drawer ? 'close' : 'menu' }}</v-icon>
             </v-btn>
             <!-- <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon> -->
             <router-link :to="{name:'home'}">

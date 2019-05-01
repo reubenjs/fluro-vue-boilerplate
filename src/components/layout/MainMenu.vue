@@ -4,7 +4,12 @@
         <!-- <v-navigation-drawer class="main-menu" v-model="drawer"> -->
         <v-toolbar class="elevation-0">
             <v-toolbar-title>
-                <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon>
+                <v-btn icon @click.stop="toggle()">
+                <v-icon>{{this.drawer ? 'close' : 'menu' }}</v-icon>
+            </v-btn>
+
+
+                <!-- <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon> -->
             </v-toolbar-title>
         </v-toolbar>
         <v-list fill-height column>
@@ -33,7 +38,7 @@
                                 </v-list-tile-content>
                             </v-list-tile>
                         </template>
-                        <v-list-tile v-for="(child, i) in item.children" :key="i" :to="{ name: child.route, query:child.routeParams}">
+                        <v-list-tile v-for="(child, i) in item.children" :key="i" @click="clicked(item)" :to="{ name: child.route, query:child.routeParams}">
                             <v-list-tile-action v-if="child.icon">
                                 <font-awesome-icon right :icon="['fas', child.icon]" />
                             </v-list-tile-action>
@@ -44,7 +49,7 @@
                                 </v-list-tile-title>
                             </v-list-tile-content>
                         </v-list-tile>
-                        <v-list-tile exact v-if="item.route" :key="item.text" :to="{ name: item.route, params:item.routeParams}">
+                        <v-list-tile exact v-if="item.route" :key="item.text" @click="clicked(item)" :to="{ name: item.route, params:item.routeParams}">
                             <v-list-tile-content>
                                 <v-list-tile-title>
                                     All {{item.text}}
@@ -55,7 +60,7 @@
                 </template>
                 <template v-else>
                     <template v-if="!item.meta || !item.meta.mini">
-                        <v-list-tile :key="item.text" :to="{ name: item.route, params:item.routeParams}" active-class>
+                        <v-list-tile :key="item.text" @click="clicked(item)" :to="{ name: item.route, params:item.routeParams}" active-class>
                             <v-list-tile-action>
                                 <font-awesome-icon right :icon="['fas', item.icon]" />
                             </v-list-tile-action>
@@ -88,7 +93,17 @@ export default {
         },
         logout() {
             this.$fluro.auth.logout();
+            this.drawer = false;
         },
+        clicked(item) {
+
+
+            if(item.click) {
+                if(this[item.click]){
+                    this[item.click]();
+                }
+            }
+        }
     },
     created() {
         //Close on create
@@ -126,7 +141,7 @@ export default {
             //If we aren't logged in
             if (!this.user) {
                 menu.push({
-                    icon: 'sign-in',
+                    icon: 'sign-in-alt',
                     text: 'Login',
                     route: 'user.login',
                 })
@@ -154,6 +169,14 @@ export default {
                         route: 'user.accounts',
                     })
                 }
+
+
+                //Add a link to the switch accounts page
+                    menu.push({
+                        icon: 'sign-out-alt',
+                        text: 'Sign Out',
+                        click:'logout',
+                    })
             }
 
             ////////////////////////////////

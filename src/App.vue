@@ -5,14 +5,17 @@
         <v-content class="main-content">
             <router-view />
         </v-content>
-        <v-footer class="pa-3" v-if="!footerDisabled">
-
-            <div class="footer-links">
-                <a href="https://www.fluro.io" target="_blank">Powered by Fluro</a>
-            </div>
-            <v-spacer></v-spacer>
-            <div>&copy; {{ new Date().getFullYear() }}</div>
-        </v-footer>
+        <wrapper class="footer" xs v-if="!footerDisabled">
+            <constrain sm>
+                <v-layout>
+                    <div class="footer-links">
+                        <a href="https://www.fluro.io" target="_blank">Powered by Fluro</a>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <div>&copy; {{ new Date().getFullYear() }}</div>
+                </v-layout>
+            </constrain>
+        </wrapper>
     </v-app>
 </template>
 <script>
@@ -26,6 +29,7 @@ import MainToolbar from '@/components/layout/MainToolbar.vue';
 //Include our SEO Mixin
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
+import { Layout } from 'fluro-vue';
 
 ////////////////////////////////
 
@@ -34,7 +38,7 @@ export default {
         MainMenu,
         MainToolbar,
     },
-    mixins: [SEOMixin, UserMixin],
+    mixins: [SEOMixin, UserMixin, Layout],
     computed: {
         footerDisabled() {
             var self = this;
@@ -49,7 +53,7 @@ export default {
             //Returns true if we are running as an app or logged in as a user
             var isUser = (this.user);
             var isApplication = (this.application && this.application.authenticationStyle == 'application');
-            
+
             if (isUser || isApplication) {
                 return true;
             }

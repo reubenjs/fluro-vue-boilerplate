@@ -62,3 +62,12 @@ npm run lint
 - [FontAwesome](https://fontawesome.com/) If you want to use the Pro icons add your license number into the `/.npmrc` file 
 
 
+```bash
+#If you want to add and use font awesome pro in your app
+#Update the .npmrc file with your license number then run
+npm install @fortawesome/pro-regular-svg-icons --save
+npm install @fortawesome/pro-solid-svg-icons --save
+
+# And then uncomment the font awesome section in the /src/main.js file
+```
+

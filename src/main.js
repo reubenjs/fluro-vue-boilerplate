@@ -24,10 +24,16 @@ Vue.use(VueFuse)
 var fluro = Vue.prototype.$fluro;
 fluro.auth.addEventListener('change', userUpdated);
 
+
+
+
+
+
 /////////////////////////////////////////////////////
 
 //Keep track of whether the user is logged in
 var previousLoggedInUser;
+var vm;
 
 //Everytime the user changes
 function userUpdated(user) {
@@ -53,18 +59,14 @@ function userUpdated(user) {
         //If we were logged in before
         //and now we aren't
         if (wasLoggedInAs) {
-
-            self.$toasted.show(`Bye ${wasLoggedInAs.firstName}!`, {
+            vm.$toasted.show(`See you next time ${wasLoggedInAs.firstName}!`, {
                 // icon:'check'
                 duration: 3500,
                 type: 'success',
             })
 
-
             //Redirect to the home page
             router.push({ name: 'home' });
-            
-
         }
     }
 }
@@ -112,12 +114,8 @@ Vue.use(VueAnalytics, {
 })
 
 
-///////////////////////////////////////
 
-//Include the AsyncComputed Plugin
-//because it makes life easy!
-import AsyncComputed from 'vue-async-computed'
-Vue.use(AsyncComputed)
+
 
 
 //Include Toast notifications
@@ -154,22 +152,44 @@ Vue.use(Toasted, {
     // fitToScreen:true,
 })
 
+
+
+///////////////////////////////////////
+
+//Include the AsyncComputed Plugin
+//because it makes life easy!
+import AsyncComputed from 'vue-async-computed'
+Vue.use(AsyncComputed)
+
+
 //////////////////////////////////////
+
 
 //Use Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { fas } from '@fortawesome/pro-solid-svg-icons'
-import { far } from '@fortawesome/pro-regular-svg-icons'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
-library.add(far, fas);
+
+
+//Font Awesome Free
+import { fas } from '@fortawesome/free-solid-svg-icons'
+library.add(fas);
+
+//Font Awesome Pro
+// import { fas } from '@fortawesome/pro-solid-svg-icons'
+// import { far } from '@fortawesome/pro-regular-svg-icons'
+// library.add(far, fas);
+
+
+
 
 ///////////////////////////////////////
 
 import Vuetify from 'vuetify'
 Vue.use(Vuetify, {
-    iconfont: 'far'
+    // iconfont: 'fa'
 });
+
 
 
 ///////////////////////////////////////
@@ -180,7 +200,7 @@ Vue.prototype.$filters = Vue.options.filters
 ///////////////////////////////////////
 
 
-new Vue({
+vm = new Vue({
     router,
     store,
     render: h => h(App)

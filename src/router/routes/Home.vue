@@ -8,57 +8,71 @@
             </p>
             <p>
                 A few key details you might want to know
-                <ul>
+                <ol>
                     <li>
                         Make sure you checkout the <a target="_blank" href="https://fluro-developers.github.io/fluro-vue/#/">Fluro Vue API documentation</a>
                     </li>
                     <li>
-                        <strong>Updating your application url</strong><br />
-                        Create an application in Fluro and Update the VUE_APP_REMOTE_URL in the 'vue.config.js' file variable to match it's domain
+                        <strong>Create your application in Fluro</strong><br />
+                        Create your application in the <a href="https://admin.fluro.io/application" target="_blank">Fluro admin panel</a> and configure it's settings.<br />
                     </li>
                     <li>
                         <strong>Allow Origin</strong><br />
-                        Make sure to add 'http://localhost:8080' as an Allowed Origin in your Application settings so that you can authenticate while you're developing
+                        Make sure to add 'http://localhost:8080' as an Allowed Origin in your Application Authentication settings so that you can authenticate while you're developing
+                    </li>
+                    If you want to use login/authentication then make sure to add <strong>http://localhost:8080</strong> to your application's while you are developing
+                    </li>
+                    <li>
+                        and update the VUE_APP_REMOTE_URL in the <strong>vue.config.js</strong> file variable to match the domain you want to sign in on
                     </li>
                     <li>
                         <strong>Font Awesome Icons</strong><br />
                         If you want to use the FontAwesome Pro Library update the '.npmrc' file with your license number
                     </li>
-                </ul>
+                </ol>
             </p>
-            <div>
-                <!-- REALM SELECT -->
-                <fluro-realm-select v-model="realms"></fluro-realm-select>
-            </div>
+            <wrapper sm>
+                <h4>Here's an example of how to render an image</h4>
+                <!-- <fluro-image contain item="5bd6340d1a289a5dfac59369" :width="1920" :height="1280" :spinner="true" /> -->
+            </wrapper>
             <div v-for="type in types">
                 <h2>{{type.title}}</h2>
-                <!-- <form v-for="definition in type.definitions">
-                    <formly-form :form="form" :model="model" :fields="definition.fields"></formly-form>
-                    <button type="submit">Submit</button>
-                </form> -->
                 <div v-for="definition in type.definitions">
                     <fluro-content-form v-model="model" :fields="definition.fields"></fluro-content-form>
-                    <!-- <pre>{{model}}</pre> -->
                 </div>
             </div>
         </constrain>
     </wrapper>
 </template>
 <script>
+/////////////////////////////////////////
+
+//Mixin SEO and head
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
-// import {Layout} from 'fluro-vue';
-import { Layout, FluroContentForm } from 'fluro-vue';
-// import Contain from '@/components/Contain';
+
+//Get our components from FluroVue
+import { Layout, FluroContentForm, FluroCodeEditor } from 'fluro-vue';
+
+/////////////////////////////////////////
 
 
 export default {
     components: {
         FluroContentForm,
+        FluroCodeEditor,
+    },
+    methods: {
+        codeEditorInit(editor) {
+            // editor.setReadOnly(true);
+        }
     },
     mixins: [SEOMixin, UserMixin, Layout],
     data() {
         return {
+            examples: {
+                image: '<fluro-image contain item="5bd6340d1a289a5dfac59369" :width="1920" :height="1280" :spinner="true" />',
+            },
             realms: [],
             model: {
 
