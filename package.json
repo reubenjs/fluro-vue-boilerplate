@@ -13,7 +13,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.17",
     "@fortawesome/free-solid-svg-icons": "^5.8.1",
     "@fortawesome/vue-fontawesome": "^0.1.6",
-    "fluro-vue": "^1.0.4",
+    "fluro-vue": "^1.0.8",
     "lodash": "^4.17.11",
     "vue": "^2.6.10",
     "vue-analytics": "^5.16.4",
