@@ -1,23 +1,24 @@
 <template>
-    <wrapper>
-        <constrain xs>
-            <div class="login-logo">
-                <div>
-                    <h2>Sign In</h2>
-                    <!-- <p class="text-muted small">Please log in to continue</p> -->
+    <v-container>
+        <wrapper>
+            <constrain xs>
+                <div class="login-logo">
+                    <div>
+                        <h2>Sign In</h2>
+                        <!-- <p class="text-muted small">Please log in to continue</p> -->
+                    </div>
                 </div>
-            </div>
-
-            <form @submit.prevent="submit">
-                <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
-                <v-text-field ref="password" v-model="password" :error-messages="passwordErrors" label="Password" required @input="$v.password.$touch()" @blur="$v.password.$touch()" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'visibility' : 'visibility_off'" @click:append="showPassword = !showPassword"></v-text-field>
-                <!--  -->
-                <v-btn block large :disabled="$v.$invalid" color="primary" type="submit">Sign In</v-btn>
-                <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
-                <v-btn block :to="{name:'user.forgot'}" large flat>Forgot Password?</v-btn>
-            </form>
-        </constrain>
-    </wrapper>
+                <form @submit.prevent="submit">
+                    <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
+                    <v-text-field ref="password" v-model="password" :error-messages="passwordErrors" label="Password" required @input="$v.password.$touch()" @blur="$v.password.$touch()" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'visibility' : 'visibility_off'" @click:append="showPassword = !showPassword"></v-text-field>
+                    <!--  -->
+                    <v-btn block large :disabled="$v.$invalid" color="primary" type="submit">Sign In</v-btn>
+                    <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
+                    <v-btn block :to="{name:'user.forgot'}" large flat>Forgot Password?</v-btn>
+                </form>
+            </constrain>
+        </wrapper>
+    </v-container>
 </template>
 <script>
 import _ from 'lodash';
@@ -26,7 +27,7 @@ import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 import { validationMixin } from 'vuelidate';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
-import {Layout} from 'fluro-vue';
+import { Layout } from 'fluro-vue';
 
 
 
@@ -45,10 +46,10 @@ export default {
     mounted() {
 
         //If they haven't typed an email in
-        if(!this.email || !this.email.length) {
-           this.$refs.email.focus()
+        if (!this.email || !this.email.length) {
+            this.$refs.email.focus()
         } else {
-           this.$refs.password.focus()
+            this.$refs.password.focus()
         }
     },
     methods: {

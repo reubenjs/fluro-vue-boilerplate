@@ -1,7 +1,7 @@
 <template>
 
     <!-- <wrapper> -->
-        <div>
+        <v-container>
         <constrain class="text-xs-center" xs v-if="!user">
             <p>This page is only available to authenticated users</p>
         </constrain>
@@ -35,7 +35,7 @@
                 </v-card>
             </v-container>
         </constrain>
-    </div>
+    </v-container>
     <!-- </wrapper> -->
 </template>
 <script>

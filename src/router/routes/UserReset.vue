@@ -1,33 +1,37 @@
 <template>
-    <wrapper>
-        <constrain class="text-xs-center" xs v-if="loading">
-            <p class="lead">Processing...</p>
-            <v-progress-circular indeterminate></v-progress-circular>
-        </constrain>
-        <constrain sm v-if="!loading">
-            <h1>Update your details</h1>
-            <p>Hi {{details.firstName}}, you can update your password and details below</p>
-            <!-- FORMSLY -->
-            <form @submit.prevent="submit">
-                <v-layout row wrap>
-                    <v-flex pr-4 d-flex align-center xs12 sm6>
-                        <v-text-field outline v-model="firstName" :error-messages="firstNameErrors" required label="First Name" @blur="$v.firstName.$touch()"></v-text-field>
-                    </v-flex>
-                    <v-flex d-flex align-center xs12 sm6>
-                        <v-text-field outline v-model="lastName" :error-messages="lastNameErrors" required label="Last Name" @blur="$v.lastName.$touch()"></v-text-field>
-                    </v-flex>
-                </v-layout>
-                <!-- <v-text-field outline v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field> -->
-                <v-text-field outline type="password" v-model="password" :error-messages="passwordErrors" label="Set a new password" required @input="$v.password.$touch()" @blur="$v.password.$touch()"></v-text-field>
-                <v-text-field outline type="password" v-model="confirmPassword" :error-messages="confirmErrors" label="Confirm your new password" required @input="$v.confirmPassword.$touch()" @blur="$v.confirmPassword.$touch()"></v-text-field>
-                <v-layout row wrap>
-                    <v-flex d-flex align-center xs12 sm5>
-                        <v-btn block large color="primary" type="submit">Save changes</v-btn>
-                    </v-flex>
-                </v-layout>
-            </form>
-        </constrain>
-    </wrapper>
+    <v-container>
+        <wrapper>
+            <constrain class="text-xs-center" xs v-if="loading">
+                <p class="lead">Processing...</p>
+                <v-progress-circular indeterminate></v-progress-circular>
+            </constrain>
+            <constrain sm v-if="!loading">
+                <h1>Update your details</h1>
+                <p>Hi {{details.firstName}}, you can update your password and details below</p>
+                <!-- FORMSLY -->
+                <form @submit.prevent="submit" >
+                    
+                    <v-layout row wrap>
+                        <v-flex pr-4 d-flex align-center xs12 sm6>
+                            <v-text-field outline v-model="firstName" :error-messages="firstNameErrors" required label="First Name" @blur="$v.firstName.$touch()"></v-text-field>
+                        </v-flex>
+                        <v-flex d-flex align-center xs12 sm6>
+                            <v-text-field outline v-model="lastName" :error-messages="lastNameErrors" required label="Last Name" @blur="$v.lastName.$touch()"></v-text-field>
+                        </v-flex>
+                    </v-layout>
+                    <!-- <v-text-field outline v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field> -->
+                    <v-text-field outline type="password" v-model="password" :error-messages="passwordErrors" label="Set a new password" required @input="$v.password.$touch()" @blur="$v.password.$touch()"></v-text-field>
+                    <v-text-field outline type="password" v-model="confirmPassword" :error-messages="confirmErrors" label="Confirm your new password" required @input="$v.confirmPassword.$touch()" @blur="$v.confirmPassword.$touch()"></v-text-field>
+                    <v-layout row wrap>
+                        <v-flex d-flex align-center xs12 sm5>
+                           <v-btn block large color="primary" :disabled="$v.$invalid" type="submit">Save changes</v-btn>
+                        </v-flex>
+                    </v-layout>
+                
+                </form>
+            </constrain>
+        </wrapper>
+    </v-container>
 </template>
 <script>
 import _ from 'lodash';

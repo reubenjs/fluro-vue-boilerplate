@@ -1,23 +1,25 @@
 <template>
-    <wrapper>
-        <constrain xs v-if="!loading">
-            <div class="login-logo">
-                <div>
-                    <h2>Forgotten Password</h2>
-                    <p class="text-muted small">Enter your email to reset your password</p>
+    <v-container>
+        <wrapper>
+            <constrain xs v-if="!loading">
+                <div class="login-logo">
+                    <div>
+                        <h2>Forgotten Password</h2>
+                        <p class="text-muted small">Enter your email to reset your password</p>
+                    </div>
                 </div>
-            </div>
-            <form @submit.prevent="submit">
-                <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
-                <v-btn block large color="primary" :disabled="$v.$invalid" type="submit">Send Reset Link</v-btn>
-                <v-btn block @click="back()" large flat>Back</v-btn>
-            </form>
-        </constrain>
-        <constrain class="text-xs-center" xs v-if="loading">
-            <p class="lead">Processing...</p>
-            <v-progress-circular indeterminate></v-progress-circular>
-        </constrain>
-    </wrapper>
+                <form @submit.prevent="submit">
+                    <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
+                    <v-btn block large color="primary" :disabled="$v.$invalid" type="submit">Send Reset Link</v-btn>
+                    <v-btn block @click="back()" large flat>Back</v-btn>
+                </form>
+            </constrain>
+            <constrain class="text-xs-center" xs v-if="loading">
+                <p class="lead">Processing...</p>
+                <v-progress-circular indeterminate></v-progress-circular>
+            </constrain>
+        </wrapper>
+    </v-container>
 </template>
 <script>
 import _ from 'lodash';
@@ -39,8 +41,8 @@ export default {
     },
 
     mounted() {
-        if(!this.email || !this.email.length) {
-           return this.$refs.email.focus()
+        if (!this.email || !this.email.length) {
+            return this.$refs.email.focus()
         }
     },
     data() {

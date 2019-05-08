@@ -1,4 +1,5 @@
 <template>
+     <v-container>
     <wrapper>
         <constrain sm>
             <div class="login-logo">
@@ -23,7 +24,7 @@
                 <v-text-field type="password" v-model="confirmPassword" :error-messages="confirmErrors" label="Confirm your password" required @input="$v.confirmPassword.$touch()" @blur="$v.confirmPassword.$touch()"></v-text-field>
                 <v-layout row wrap>
                     <v-flex d-flex align-center xs12 sm5>
-                        <v-btn block large color="primary" type="submit">Continue</v-btn>
+                        <v-btn block large color="primary"  :disabled="$v.$invalid" type="submit">Continue</v-btn>
                     </v-flex>
                     <v-flex d-flex offset-sm1 align-center xs12 sm6>
                         <v-btn block :to="{name:'user.login'}" large flat>Already have an account?</v-btn>
@@ -33,6 +34,7 @@
             </form>
         </constrain>
     </wrapper>
+</v-container>
 </template>
 <script>
 import _ from 'lodash';

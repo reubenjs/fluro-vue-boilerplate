@@ -54,6 +54,7 @@
 
          <!-- <pre>{{text}}</pre> -->
 
+            <h5>Just for fun, let's load your definitions and spit out some forms</h5>
             <div v-for="type in types">
                 
                 <div v-for="definition in type.definitions" v-if="definition._id != '5cca06b411399d3a111d7f19'">
@@ -63,7 +64,7 @@
 
                    
 
-                    <fluro-content-form @input="update" v-model="model" :fields="definition.fields"></fluro-content-form>
+                    <fluro-content-form v-model="model" :fields="definition.fields"></fluro-content-form>
                 </div>
             </div>
         </constrain>
@@ -77,7 +78,7 @@ import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 
 //Get our components from FluroVue
-import { Layout, FluroContentForm, FluroCodeEditor, FluroEditor } from 'fluro-vue';
+import { Layout, FluroContentForm} from 'fluro-vue';
 
 /////////////////////////////////////////
 
@@ -85,21 +86,6 @@ import { Layout, FluroContentForm, FluroCodeEditor, FluroEditor } from 'fluro-vu
 export default {
     components: {
         FluroContentForm,
-        FluroCodeEditor,
-        FluroEditor,
-    },
-    methods: {
-        trace(output) {
-            // console.log('Trace:', output);
-            this.$forceUpdate();
-        },
-        update(val) {
-            // console.log('Top level', val);
-            this.$forceUpdate();
-        },
-        codeEditorInit(editor) {
-            // editor.setReadOnly(true);
-        }
     },
     mixins: [SEOMixin, UserMixin, Layout],
     data() {
@@ -107,7 +93,6 @@ export default {
             examples: {
                 image: '<fluro-image contain item="5bd6340d1a289a5dfac59369" :width="1920" :height="1280" :spinner="true" />',
             },
-            realms: [],
             model: {},
             text:'',
         }
