@@ -1,6 +1,13 @@
 # Fluro Vue Boilerplate
 
-## Project setup
+### Links
+[Fluro.io](https://fluro.io) |
+[REST API Documentation](https://developer.fluro.io) |
+[Fluro Vue Documentation](https://www.npmjs.com/package/fluro-vue) | 
+[Fluro Support](https://support.fluro.io)
+
+
+# Installation and Setup
 Clone this repo
 
 ```bash
