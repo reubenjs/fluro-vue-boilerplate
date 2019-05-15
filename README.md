@@ -7,8 +7,16 @@
 [Fluro Support](https://support.fluro.io)
 
 
+Ensure that you have Vue installed on your machine
+```bash
+npm install -g @vue/cli
+```
+
+
 # Installation and Setup
 Clone this repo
+
+Install
 
 ```bash
 git clone https://github.com/fluro-developers/fluro-vue-boilerplate my-new-app

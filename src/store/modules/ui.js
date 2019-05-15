@@ -5,7 +5,7 @@ import { getField, updateField } from 'vuex-map-fields';
 ///////////////////////////////////
 
 const state = {
-    drawer: false,
+    drawer: true,
     drawerMini: false,
     
 }

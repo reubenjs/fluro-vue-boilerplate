@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import './plugins/vuetify'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -23,11 +22,6 @@ Vue.use(VueFuse)
 //Listen for when the user session changes
 var fluro = Vue.prototype.$fluro;
 fluro.auth.addEventListener('change', userUpdated);
-
-
-
-
-
 
 /////////////////////////////////////////////////////
 
@@ -70,6 +64,67 @@ function userUpdated(user) {
         }
     }
 }
+
+
+
+/////////////////////////////////////////////////////
+
+//Use Fluro as a global singleton 
+//So we can easily view/edit/delete content from any component
+//usually this would change to a certain route
+fluro.global.view = function(item, modal) {
+
+    //Choose which route depending on what item
+    //we are asking to open
+    switch (item.definition) {
+        case 'forum':
+            var firstCategory = _.find(item.realms, { definition: 'forumCategory' });
+            router.push({
+                name: 'forum.post',
+                params: {
+                    category: firstCategory.slug,
+                    post: item.slug,
+                }
+
+            })
+            break;
+        default:
+
+            //Navigate to the page
+            router.push({
+                name: 'view',
+                params: {
+                    slug: item.slug,
+                }
+            })
+            break;
+    }
+}
+
+//fluro.global.edit = function(item, model) {}
+//fluro.global.delete = function(item, model) {}
+
+
+/////////////////////////////////////////////////////
+
+//Don't have to do this
+//but it means that the app
+//will make a call to the server just in case permissions
+//have changed
+fluro.auth.sync();
+
+/////////////////////////////////////////////////////
+
+//Listen for Fluro errors and print them to screen
+fluro.addEventListener('error', function(message) {
+
+    vm.$toasted.show(message, {
+        type: 'error',
+    })
+
+});
+
+
 
 /////////////////////////////////////////////////////
 
@@ -185,9 +240,17 @@ library.add(fas);
 
 ///////////////////////////////////////
 
+
 import Vuetify from 'vuetify'
+import '@/styles/vuetify.styl';
 Vue.use(Vuetify, {
-    // iconfont: 'fa'
+    customProperties: true,
+    // iconfont: 'far',
+    theme: {
+        dark: '#33373e',
+        primary: '#1bc3fe',
+        secondary: '#d1f18a',
+    }
 });
 
 

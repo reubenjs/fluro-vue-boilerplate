@@ -1,32 +1,35 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './routes/Home.vue'
-import Search from './routes/Search.vue'
 import store from '../store'
 
 ///////////////////////////////////
 
+//Routes
+const Home = () => import('./routes/Home.vue');
+const Search = () => import('./routes/Search.vue');
+
+///////////////////////////////////
+
 //User Authentication Routes
-import UserLogin from './routes/UserLogin.vue'
-import UserSignup from './routes/UserSignup.vue'
-import UserForgot from './routes/UserForgot.vue'
-import UserReset from './routes/UserReset.vue'
-import UserAccounts from './routes/UserAccounts.vue'
+const UserLogin = () => import('./routes/UserLogin.vue');
+const UserSignup = () => import('./routes/UserSignup.vue');
+const UserForgot = () => import('./routes/UserForgot.vue');
+const UserReset = () => import('./routes/UserReset.vue');
+const UserAccounts = () => import('./routes/UserAccounts.vue');
+
+///////////////////////////////////
+
+//Content View Routes
+
+//Generic View Route
+const View = () => import('./routes/View.vue');
+
+
 
 ///////////////////////////////////
 
 //Use the router
 Vue.use(Router)
-
-///////////////////////////////////
-
-// //Create an event bus so we can reuse the search bar in the toolbar for different routes
-// var $globalSearch = new Vue();
-// Vue.prototype.$globalSearch = $globalSearch;
-
-///////////////////////////////////
-
-
 
 ///////////////////////////////////
 
@@ -45,6 +48,20 @@ array.push({
     props: (route) => ({
         photo: route.query.photo,
     })
+})
+
+//////////////////////////////////////
+
+array.push({
+    name: 'view',
+    path: '/view/:slug',
+    meta: {
+        title: 'View',
+    },
+    props: (route) => ({
+        slug: route.params.slug,
+    }),
+    component: View,
 })
 
 //////////////////////////////////////

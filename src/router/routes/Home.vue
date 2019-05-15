@@ -55,9 +55,9 @@
          <!-- <pre>{{text}}</pre> -->
 
             <h5>Just for fun, let's load your definitions and spit out some forms</h5>
-            <div v-for="type in types">
+            <template v-for="type in types">
                 
-                <div v-for="definition in type.definitions" v-if="definition._id != '5cca06b411399d3a111d7f19'">
+                <template v-for="definition in type.definitions" v-if="definition._id != '5cca06b411399d3a111d7f19'">
 
                     <h2>{{definition.title}}</h2>
                     <!-- <pre>TOP MODEL IS {{model}}</pre> -->
@@ -65,8 +65,8 @@
                    
 
                     <fluro-content-form v-model="model" :fields="definition.fields"></fluro-content-form>
-                </div>
-            </div>
+                </template>
+            </template>
         </constrain>
     </wrapper>
 </template>

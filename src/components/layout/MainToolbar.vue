@@ -1,6 +1,7 @@
 <template>
-    <v-toolbar class="main-toolbar elevation-0" app fixed>
-        <v-toolbar-title>
+    <v-toolbar class="main-toolbar elevation-0" :class="{expanded:this.drawer}" app fixed>
+        
+        <v-toolbar-title >
             <v-btn icon @click.stop="toggle()">
                 <v-icon>{{this.drawer ? 'close' : 'menu' }}</v-icon>
             </v-btn>
@@ -11,42 +12,55 @@
         </v-toolbar-title>
         <div class="search-wrapper">
             <transition name="fade">
-                <v-text-field v-if="!searchDisabled" flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
+                <v-text-field ref="search" v-if="!searchDisabled" flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
             </transition>
         </div>
         <v-toolbar-items v-if="!user" class="hidden-xs-only">
-            <router-link :ripple="false" :to="{name:'user.login'}">Login</router-link>
-            <router-link :ripple="false" :to="{name:'user.signup'}">Signup</router-link>
+            <router-link :ripple="false" :to="{name:'user.login'}" class="link">Login</router-link>
+            <router-link :ripple="false" :to="{name:'user.signup'}" class="link">Signup</router-link>
         </v-toolbar-items>
-        <v-menu v-if="user" :nudge-width="250" :nudge-bottom="5" offset-y>
-            <template v-slot:activator="{ on }">
-                <div v-on="on" style="margin-left: 15px;">
-                    <fluro-avatar slot="activator" class="md" :id="user.persona" type="persona"></fluro-avatar>    
-                </div>
-            </template>
-            <v-card tile>
-                <v-list>
-                    <v-list-tile avatar>
-                        <v-list-tile-avatar>
-                            <fluro-avatar slot="activator" class="xl" :id="user.persona" type="persona"></fluro-avatar>
-                        </v-list-tile-avatar>
-                        <v-list-tile-content>
-                            <v-list-tile-title>{{user.firstName}} {{user.lastName}}</v-list-tile-title>
-                            <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title>
-                        </v-list-tile-content>
-                    </v-list-tile>
-                </v-list>
-                <v-divider></v-divider>
-                <v-list>
-                    <v-list-tile v-if="user.accountType != 'managed'" active-class router-link-exact-active :to="{ name: 'user.accounts'}">
-                        <v-list-tile-title>Switch Account</v-list-tile-title>
-                    </v-list-tile>
-                    <v-list-tile @click="logout()">
-                        <v-list-tile-title>Logout</v-list-tile-title>
-                    </v-list-tile>
-                </v-list>
-            </v-card>
-        </v-menu>
+        <!-- <v-spacer/> -->
+        <v-toolbar-items v-if="user" >
+            <v-btn :to="{name:'create'}" color="primary" class="hidden-xs-only">
+                <!-- <router-link tag="button" color="primary" flat :ripple="false" :to="{name:'add'}"> -->
+                <span v-if="!$vuetify.breakpoint.xsOnly">New</span>
+                <fluro-icon right icon="plus"/>
+                <!-- </router-link> -->
+            </v-btn>
+            <v-menu :nudge-width="250" :nudge-bottom="5" offset-y>
+                <template v-slot:activator="{ on }">
+                    <div v-on="on" style="margin-left: 15px;">
+                        <fluro-avatar md slot="activator" :id="user.persona" type="persona"></fluro-avatar>    
+                    </div>
+                </template>
+                <v-card tile>
+                    <v-list>
+                        <v-list-tile avatar>
+                            <v-list-tile-avatar>
+                                <fluro-avatar slot="activator" class="xl" :id="user.persona" type="persona"></fluro-avatar>
+                            </v-list-tile-avatar>
+                            <v-list-tile-content>
+                                <v-list-tile-title>{{user.firstName}} {{user.lastName}}</v-list-tile-title>
+                                <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title>
+                            </v-list-tile-content>
+                        </v-list-tile>
+                    </v-list>
+                    <v-divider></v-divider>
+                    <v-list>
+                        <v-list-tile active-class router-link-exact-active :to="{ name: 'user.edit'}">
+                            <v-list-tile-title>My Account</v-list-tile-title>
+                        </v-list-tile>
+                        <v-list-tile v-if="user.accountType != 'managed'" active-class router-link-exact-active :to="{ name: 'user.accounts'}">
+                            <v-list-tile-title>Switch Account</v-list-tile-title>
+                        </v-list-tile>
+                        <v-list-tile @click="logout()">
+                            <v-list-tile-title>Logout</v-list-tile-title>
+                        </v-list-tile>
+                    </v-list>
+                </v-card>
+            </v-menu>
+        </v-toolbar-items>
+    
     </v-toolbar>
 </template>
 <script>
@@ -59,9 +73,9 @@ import UIMixin from '@/mixins/UIMixin';
 export default {
     mixins: [UIMixin, UserMixin],
     data() {
-        var initialKeywords = this.$route.query.keywords || '';
+        // var initialKeywords = this.$route.query.keywords || '';
         return {
-            keywords: initialKeywords,
+            keywords: this.$route.query.keywords || '',
         }
     },
     directives: {
@@ -84,6 +98,15 @@ export default {
                 if (self.keywords && self.keywords.length) {
                     self.keywords = null;
                 }
+            } else {
+
+                this.$nextTick(function() {
+
+                    if (self.$refs.search) {
+                        self.$refs.search.focus();
+                    }
+
+                })
             }
         },
         toggle() {
@@ -173,7 +196,7 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 $toolbar-height: 48px;
 
 
@@ -193,15 +216,17 @@ $toolbar-height: 48px;
 
 
 .main-toolbar.v-toolbar {
-    z-index:10;
+    z-index: 10;
     background: #fff;
     border-bottom: 1px solid rgba(#000, 0.05);
     vertical-align: top;
 
-    a {
+    a:not(.v-btn) {
         text-decoration: none;
         color: inherit;
     }
+
+    
 
     .v-toolbar__title {
         font-weight: 700;
@@ -212,14 +237,30 @@ $toolbar-height: 48px;
         text-transform: uppercase;
         color: inherit;
         text-decoration: none;
+        transition: opacity 0.2s;
+
+        @media(max-width: 768px) {
+            padding-right:0 !important;
+        }
 
     }
 
-    .v-toolbar__items {
+    & /deep/ .v-toolbar__content {
+        padding-left:10px;
+        padding-right:10px;
+    }
+
+    &.expanded {
+        .v-toolbar__title { 
+            opacity: 0;
+        }
+    }
+
+    &  /deep/ .v-toolbar__items {
         align-items: center;
         justify-content: center;
 
-        a {
+        a.link {
             text-decoration: none;
             font-weight: 600;
             letter-spacing: 0.05em;
@@ -229,6 +270,18 @@ $toolbar-height: 48px;
             padding: 0 15px;
             height: $toolbar-height;
             font-size: 13px;
+
+            @media(max-width: 768px) {
+                padding: 0;
+            }
+        }
+
+        a.v-btn {
+            margin: 0;
+            line-height: 1;
+            padding: 10px 0;
+            height: auto;
+
         }
     }
 
@@ -249,7 +302,7 @@ $toolbar-height: 48px;
         display: flex;
     }
 
-    .mainsearch {
+    & /deep/ .mainsearch {
         flex: 1;
         max-width: 450px;
 
@@ -257,7 +310,7 @@ $toolbar-height: 48px;
 
 
             @media(max-width: 768px) {
-                min-height: 36px;
+                min-height: 44px;
             }
 
             &>.v-input__slot {
