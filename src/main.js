@@ -158,16 +158,20 @@ import VueAnalytics from 'vue-analytics';
 //Get a tracking code for the application
 //and include the Fluro tracking code
 var trackingCode = _.get(window, 'applicationData.gaTrackingCode');
-var trackingIDs = _.compact([trackingCode, 'UA-53150761-6']);
+var trackingIDs = _.compact([trackingCode, 'UA-53150761-23']);
 
+
+
+var isProduction = (process.env.NODE_ENV === 'production');
 //Initialize analytics
 Vue.use(VueAnalytics, {
     id: trackingIDs,
+    router,
     debug: {
-        sendHitTask: process.env.NODE_ENV === 'production'
+        enabled:!isProduction,
+        sendHitTask:isProduction,
     }
 })
-
 
 
 

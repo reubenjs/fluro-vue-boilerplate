@@ -19,7 +19,7 @@ Clone this repo
 Install
 
 ```bash
-git clone https://github.com/fluro-developers/fluro-vue-boilerplate my-new-app
+git clone https://github.com/fluro-developers/fluro-vue-boilerplate my-new-app --depth 1
 ```
 
 Install the required node modules
