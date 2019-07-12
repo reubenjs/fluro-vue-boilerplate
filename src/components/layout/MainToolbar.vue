@@ -1,55 +1,90 @@
 <template>
-    <v-toolbar class="main-toolbar elevation-0" :class="{expanded:this.drawer}" app fixed>
-        
-        <v-toolbar-title >
+    <v-toolbar class="main-toolbar elevation-0" :class="{expanded:drawer}" app fixed>
+        <v-toolbar-title>
             <v-btn icon @click.stop="toggle()">
-                <v-icon>{{this.drawer ? 'close' : 'menu' }}</v-icon>
+                <v-icon>{{drawer ? 'close' : 'menu' }}</v-icon>
+            </v-btn>
+            <v-btn v-if="backEnabled && $vuetify.breakpoint.smAndUp" @click="back()">
+                <fluro-icon library="far" icon="arrow-left" left /> Back
             </v-btn>
             <!-- <v-toolbar-side-icon @click.stop="toggle()"></v-toolbar-side-icon> -->
-            <router-link :to="{name:'home'}">
+            <router-link :to="{name:'home'}" v-if="!backEnabled">
                 <span class="hidden-sm-and-down">{{title}}</span>
             </router-link>
         </v-toolbar-title>
-        <div class="search-wrapper">
+        <!-- <v-spacer /> -->
+        <!-- <div class="icons">
+            <router-link to="home">
+                <fluro-icon library="fas" icon="user" />
+            </router-link>
+            <router-link to="home">
+                <fluro-icon library="fas" icon="calendar" />
+            </router-link>
+            <router-link to="home">
+                <fluro-icon library="fas" icon="check" />
+            </router-link>
+            <router-link to="home">
+                <fluro-icon library="fas" icon="exchange-alt" />
+            </router-link>
+            <router-link to="home">
+                <fluro-icon library="fas" icon="file" />
+            </router-link>
+            <router-link to="home">
+                <fluro-icon library="fas" icon="dollar-sign" />
+            </router-link>
+        </div> -->
+        <!-- <v-spacer /> -->
+         <div class="search-wrapper" v-if="!searchDisabled">
             <transition name="fade">
-                <v-text-field ref="search" v-if="!searchDisabled" flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
+                <v-text-field ref="search"  flat solo hide-details prepend-inner-icon="search" :label="searchLabel" @focus="searchFocus" class="mainsearch" v-model="keywords" v-on:keyup.enter="submit"></v-text-field>
             </transition>
         </div>
+        <v-spacer v-if="searchDisabled" />
+
+
         <v-toolbar-items v-if="!user" class="hidden-xs-only">
             <router-link :ripple="false" :to="{name:'user.login'}" class="link">Login</router-link>
             <router-link :ripple="false" :to="{name:'user.signup'}" class="link">Signup</router-link>
         </v-toolbar-items>
         <!-- <v-spacer/> -->
-        <v-toolbar-items v-if="user" >
-            <v-btn :to="{name:'create'}" color="primary" class="hidden-xs-only">
-                <!-- <router-link tag="button" color="primary" flat :ripple="false" :to="{name:'add'}"> -->
-                <span v-if="!$vuetify.breakpoint.xsOnly">New</span>
-                <fluro-icon right icon="plus"/>
-                <!-- </router-link> -->
-            </v-btn>
+        <v-toolbar-items v-if="user">
+            <!-- <v-btn :to="{name:'create'}" color="primary" class="hidden-xs-only"> -->
+            <!-- <router-link tag="button" color="primary" flat :ripple="false" :to="{name:'add'}"> -->
+            <!-- <span v-if="!$vuetify.breakpoint.xsOnly">New</span> -->
+            <!-- <fluro-icon right icon="plus"/> -->
+            <!-- </router-link> -->
+            <!-- </v-btn> -->
+            <v-toolbar-title v-if="$vuetify.breakpoint.smAndUp">
+                {{accountTitle}}
+            </v-toolbar-title>
             <v-menu :nudge-width="250" :nudge-bottom="5" offset-y>
                 <template v-slot:activator="{ on }">
                     <div v-on="on" style="margin-left: 15px;">
-                        <fluro-avatar md slot="activator" :id="user.persona" type="persona"></fluro-avatar>    
+                        <fluro-avatar md slot="activator" :id="user.persona" v-if="user.persona" type="persona"></fluro-avatar>    
+                        <fluro-avatar md slot="activator" :id="user" v-if="!user.persona" type="user"></fluro-avatar> 
                     </div>
                 </template>
                 <v-card tile>
                     <v-list>
                         <v-list-tile avatar>
                             <v-list-tile-avatar>
-                                <fluro-avatar slot="activator" class="xl" :id="user.persona" type="persona"></fluro-avatar>
+                                <fluro-avatar xl slot="activator" :id="user.persona" v-if="user.persona" type="persona"></fluro-avatar>    
+                                <fluro-avatar xl slot="activator" :id="user" v-if="!user.persona" type="user"></fluro-avatar>
                             </v-list-tile-avatar>
                             <v-list-tile-content>
                                 <v-list-tile-title>{{user.firstName}} {{user.lastName}}</v-list-tile-title>
+                                <v-list-tile-sub-title v-if="$vuetify.breakpoint.xsOnly">
+                                    {{accountTitle}}
+                                </v-list-tile-sub-title>
                                 <v-list-tile-sub-title>{{user.email}}</v-list-tile-sub-title>
                             </v-list-tile-content>
                         </v-list-tile>
                     </v-list>
                     <v-divider></v-divider>
                     <v-list>
-                        <v-list-tile active-class router-link-exact-active :to="{ name: 'user.edit'}">
+                        <!--  <v-list-tile active-class router-link-exact-active :to="{ name: 'user.edit'}">
                             <v-list-tile-title>My Account</v-list-tile-title>
-                        </v-list-tile>
+                        </v-list-tile> -->
                         <v-list-tile v-if="user.accountType != 'managed'" active-class router-link-exact-active :to="{ name: 'user.accounts'}">
                             <v-list-tile-title>Switch Account</v-list-tile-title>
                         </v-list-tile>
@@ -60,7 +95,6 @@
                 </v-card>
             </v-menu>
         </v-toolbar-items>
-    
     </v-toolbar>
 </template>
 <script>
@@ -68,6 +102,7 @@ import _ from 'lodash';
 
 import UserMixin from '@/mixins/UserMixin';
 import UIMixin from '@/mixins/UIMixin';
+import RouterHistory from '@/router/history';
 
 
 export default {
@@ -75,6 +110,7 @@ export default {
     data() {
         // var initialKeywords = this.$route.query.keywords || '';
         return {
+            history: RouterHistory,
             keywords: this.$route.query.keywords || '',
         }
     },
@@ -155,9 +191,22 @@ export default {
                 }
 
             }
+        },
+        back() {
+            RouterHistory.back();
         }
     },
     computed: {
+        backEnabled() {
+            return RouterHistory.trail.length > 1;
+        },
+        accountTitle() {
+            if (this.user) {
+                return this.user.account.title;
+            } else if (this.application) {
+                return this.application.account.title;
+            }
+        },
         mobile() {
 
             return this.$vuetify.breakpoint.smAndDown;
@@ -216,7 +265,7 @@ $toolbar-height: 48px;
 
 
 .main-toolbar.v-toolbar {
-    z-index: 10;
+    // z-index: 10;
     background: #fff;
     border-bottom: 1px solid rgba(#000, 0.05);
     vertical-align: top;
@@ -226,7 +275,7 @@ $toolbar-height: 48px;
         color: inherit;
     }
 
-    
+
 
     .v-toolbar__title {
         font-weight: 700;
@@ -240,23 +289,23 @@ $toolbar-height: 48px;
         transition: opacity 0.2s;
 
         @media(max-width: 768px) {
-            padding-right:0 !important;
+            padding-right: 0 !important;
         }
 
     }
 
     & /deep/ .v-toolbar__content {
-        padding-left:10px;
-        padding-right:10px;
+        padding-left: 10px;
+        padding-right: 10px;
     }
 
     &.expanded {
-        .v-toolbar__title { 
+        .v-toolbar__title {
             opacity: 0;
         }
     }
 
-    &  /deep/ .v-toolbar__items {
+    & /deep/ .v-toolbar__items {
         align-items: center;
         justify-content: center;
 
@@ -300,6 +349,15 @@ $toolbar-height: 48px;
         text-align: center;
         justify-content: center;
         display: flex;
+    }
+
+
+    .icons {
+        font-size: 20px;
+
+        a {
+            padding: 10px;
+        }
     }
 
     & /deep/ .mainsearch {

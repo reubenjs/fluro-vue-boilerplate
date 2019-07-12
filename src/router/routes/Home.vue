@@ -8,12 +8,11 @@
                     If you can see this then you are successfully running the Fluro Vue Boilerplate!
                 </p>
             </div>
-            <wrapper >
+            <wrapper>
                 <h2 title>
                     Next Steps
                 </h2>
                 <ol class="lg">
-                    
                     <li>
                         <strong>Create your application in Fluro</strong><br />
                         Create your application in the <a href="https://admin.fluro.io/application" target="_blank">Fluro admin panel</a> and configure it's settings.<br />
@@ -46,27 +45,32 @@
                 <h4>Here's an example of how to render an image</h4>
                 <fluro-image contain item="5bd6340d1a289a5dfac59369" :width="1920" :height="1280" :spinner="true" />
             </wrapper>
-
-
-           
+            <wrapper sm>
+                <h4>Here's an example of how to customise your own content form</h4>
+                <div v-if="eventTrackDefinition && eventTrack">
+                    <pre>{{eventTrack}}</pre>
+                    <fluro-content-form v-model="eventTrack" :fields="eventTrackDefinition.type.fields">
+                        <template v-slot:form="{formFields, fieldHash, model, update, options}">
+                            <fluro-content-form-field :form-fields="formFields" @input="update" :options="options" :field="fieldHash.title" v-model="model"></fluro-content-form-field>
+                            <fluro-content-form-field :form-fields="formFields" @input="update" :options="options" :field="fieldHash.autoRecur" v-model="model"></fluro-content-form-field>
+                        </template>
+                    </fluro-content-form>
+                </div>
+            </wrapper>
             <!-- <fluro-code-editor v-model="text" @input="trace" lang="js" :height="200"></fluro-code-editor> -->
             <!-- <fluro-editor v-model="text" @input="trace" :height="200"></fluro-editor> -->
+            <!-- <pre>{{text}}</pre> -->
+            <wrapper sm>
+                <h5>Just for fun, let's load your definitions and spit out some forms</h5>
+                <template v-for="type in types">
 
-         <!-- <pre>{{text}}</pre> -->
-
-            <h5>Just for fun, let's load your definitions and spit out some forms</h5>
-            <template v-for="type in types">
-                
-                <template v-for="definition in type.definitions" v-if="definition._id != '5cca06b411399d3a111d7f19'">
-
-                    <h2>{{definition.title}}</h2>
-                    <!-- <pre>TOP MODEL IS {{model}}</pre> -->
-
-                   
-
-                    <fluro-content-form v-model="model" :fields="definition.fields"></fluro-content-form>
+                    <!-- v-if="definition._id != '5cca06b411399d3a111d7f19'" -->
+                    <template v-for="definition in type.definitions" >
+                        <h2>{{definition.title}}</h2>
+                        <fluro-content-form v-model="blankModel" :fields="definition.fields"></fluro-content-form>
+                    </template>
                 </template>
-            </template>
+            </wrapper>
         </constrain>
     </wrapper>
 </template>
@@ -78,7 +82,7 @@ import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 
 //Get our components from FluroVue
-import { Layout, FluroContentForm} from 'fluro-vue';
+import { Layout, FluroContentForm, FluroContentFormField } from 'fluro-vue';
 
 /////////////////////////////////////////
 
@@ -86,18 +90,54 @@ import { Layout, FluroContentForm} from 'fluro-vue';
 export default {
     components: {
         FluroContentForm,
+        FluroContentFormField,
     },
     mixins: [SEOMixin, UserMixin, Layout],
     data() {
         return {
+            blankModel:{},
             examples: {
                 image: '<fluro-image contain item="5bd6340d1a289a5dfac59369" :width="1920" :height="1280" :spinner="true" />',
             },
-            model: {},
-            text:'',
+            text: '',
         }
     },
+
     asyncComputed: {
+        eventTrack: {
+            default: null,
+            get() {
+
+                var self = this;
+
+                return new Promise(function(resolve, reject) {
+
+                    setTimeout(function() {
+
+
+                        return resolve({
+                            title: 'something',
+                            autoRecur: true,
+                            recurCount: 5,
+                            recurWeekday: 'wednesday',
+                        });
+
+
+                    }, 1500);
+
+
+                });
+
+            }
+        },
+        eventTrackDefinition: {
+            default: null,
+            get() {
+
+                return this.$fluro.types.get('eventtrack');
+
+            }
+        },
         types: {
             default: [],
             get() {
@@ -109,6 +149,7 @@ export default {
                         })
                         .then(function(res) {
 
+                           
                             return resolve(res.data);
                         }, reject);
                 });

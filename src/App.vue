@@ -5,6 +5,7 @@
         <v-content class="main-content">
             <router-view />
         </v-content>
+
         <wrapper class="footer" xs v-if="!footerDisabled">
             <constrain sm>
                 <v-layout>

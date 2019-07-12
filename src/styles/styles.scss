@@ -1,11 +1,4 @@
-
-body {
-    overscroll-behavior-x: none !important;
-    overscroll-behavior-y: none !important;
-    overscroll-behavior: none !important;
-    overflow-x:hidden;
-}
-
+@import './variables';
 
 .no-select {
     -webkit-touch-callout: none;
@@ -20,6 +13,32 @@ body {
     /* Internet Explorer/Edge */
     user-select: none;
     /* Non-prefixed version, currently not supported by any browser */
+}
+
+html {
+    height: 100%;
+    overscroll-behavior-x: none !important;
+    overscroll-behavior-y: none !important;
+    overscroll-behavior: none !important;
+}
+
+
+
+
+body {
+    overscroll-behavior-x: none !important;
+    overscroll-behavior-y: none !important;
+    overscroll-behavior: none !important;
+    // overflow: hidden;
+    height: 100%;
+    // border: 10px solid red;
+    // padding: 10px;
+}
+
+ .scroll-y {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
 }
 
 
