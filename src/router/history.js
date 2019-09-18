@@ -1,4 +1,7 @@
 
+import Vue from 'vue';
+
+///////////////////////////////////
 
 
 const service = {
@@ -86,7 +89,12 @@ service.init = function(router) {
             }
         }
 
-        // //////////////////////////////////////////////////
+        //////////////////////////////////////////////////
+
+        // Vue.set(service, 'breadcrumb', [to]);
+        // service.breadcrumb = [to];
+
+        //////////////////////////////////////////////////
 
         var thisState = to;
         var previousState = service.trail[service.trail.length-1];
@@ -107,7 +115,7 @@ service.init = function(router) {
         //If its not the same route
         if(!match) {
             service.trail.push(to);
-            console.log('Router History', service.trail);
+            // console.log('Router History', service.trail);
         }
     })
 }

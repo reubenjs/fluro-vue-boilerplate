@@ -1,22 +1,26 @@
 <template>
     <v-app id="fluro">
-        <main-menu></main-menu>
-        <main-toolbar v-if="!headerDisabled"></main-toolbar>
-        <v-content class="main-content">
-            <router-view />
-        </v-content>
-
-        <wrapper class="footer" xs v-if="!footerDisabled">
-            <constrain sm>
-                <v-layout>
-                    <div class="footer-links">
-                        <a href="https://www.fluro.io" target="_blank">Powered by Fluro</a>
+        <template v-if="!sidebarDisabled">
+            <main-sidebar></main-sidebar>
+        </template>
+        <div class="main-content" :class="mutedClass" @click="hideDrawers()">
+            <flex-column>
+                <flex-column-header v-if="!headerDisabled">
+                    <main-header></main-header>
+                </flex-column-header>
+                <keep-alive>
+                    <router-view :key="routeCacheKey"></router-view>
+                </keep-alive>
+                <flex-column-footer>
+                    <div class="footer">
+                        <!-- Optional Fixed Footer -->
                     </div>
-                    <v-spacer></v-spacer>
-                    <div>&copy; {{ new Date().getFullYear() }}</div>
-                </v-layout>
-            </constrain>
-        </wrapper>
+                </flex-column-footer>
+            </flex-column>
+        </div>
+        <!-- <template v-if="!actionCartDisabled">
+            <action-cart></action-cart>
+        </template> -->
     </v-app>
 </template>
 <script>
@@ -24,30 +28,75 @@
 // import { mapGetters } from 'vuex'
 
 //Get the UI components
-import MainMenu from '@/components/layout/MainMenu.vue';
-import MainToolbar from '@/components/layout/MainToolbar.vue';
+import MainSidebar from '@/components/layout/MainSidebar.vue';
+import MainHeader from '@/components/layout/MainHeader.vue';
+import Breadcrumb from '@/components/Breadcrumb.vue';
 
 //Include our SEO Mixin
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
-import { Layout } from 'fluro-vue';
+import UIMixin from '@/mixins/UIMixin';
+import BreadcrumbMixin from '@/mixins/BreadcrumbMixin';
+import { Layout } from 'fluro-vue-ui';
+
 
 ////////////////////////////////
 
 export default {
     components: {
-        MainMenu,
-        MainToolbar,
+        MainSidebar,
+        MainHeader,
+        Breadcrumb,
     },
-    mixins: [SEOMixin, UserMixin, Layout],
+    mixins: [SEOMixin, BreadcrumbMixin, UIMixin, UserMixin, Layout],
+    data() {
+        return {
+            cacheKey: Math.random(),
+        }
+    },
+    created() {
+        this.$fluro.addEventListener('cache.reset', this.resetCacheKey);
+    },
+    beforeDestroy() {
+        this.$fluro.removeEventListener('cache.reset', this.resetCacheKey);
+    },
+    methods: {
+        resetCacheKey() {
+            
+            this.cacheKey = Math.random();
+        },
+        hideDrawers() {
+            this.drawer = false;
+        },
+    },
     computed: {
-        footerDisabled() {
+        routeCacheKey() {
+            //This ensures when we change something in Fluro
+            //or we switch user then we can clear out the content on the pages
+            var accountID = this.user ? this.$fluro.utils.getStringID(this.user.account) : '';
+            return `${this.cacheKey}-${accountID}-${this.$route.name}`;
+        },
+        mutedClass() {
+            if (this.mobile && this.drawer) {
+                return 'faded';
+            }
+        },
+        bleed() {
+            //Whether a page should be full bleed (no header or sidebar)
             var self = this;
-            return _.get(self, '$route.meta.disableHeader');
+            return _.get(self, '$route.meta.bleed');
+        },
+        sidebarDisabled() {
+            var self = this;
+            return self.bleed || !self.user;
         },
         headerDisabled() {
             var self = this;
-            return _.get(self, '$route.meta.disableFooter');
+            return self.bleed || _.get(self, '$route.meta.disableHeader');
+        },
+        footerDisabled() {
+            var self = this;
+            return self.bleed || _.get(self, '$route.meta.disableFooter');
         },
         authenticated() {
 
@@ -67,4 +116,11 @@ export default {
 </script>
 <style lang="scss">
 @import '@/styles/styles.scss';
+
+
+.breadcrumb-bar {
+    padding-left: 10px;
+    background: linear-gradient(rgba(#fff, 0), #fff);
+}
+
 </style>

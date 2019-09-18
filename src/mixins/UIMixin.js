@@ -8,6 +8,10 @@ import { mapFields } from 'vuex-map-fields';
 
 export default {
     computed: {
+    	mobile() {
+            // return this.$vuetify.breakpoint.smAndDown;
+            return this.$vuetify.breakpoint.smAndDown;
+        },
         ...mapFields('ui', [
         	'drawer', //Whether the sidebar is showing
 			'drawerMini', //Whether the sidebar is collapsed

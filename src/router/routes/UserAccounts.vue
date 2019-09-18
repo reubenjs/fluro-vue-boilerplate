@@ -1,42 +1,41 @@
 <template>
-
-    <!-- <wrapper> -->
+    <page>
         <v-container>
-        <constrain class="text-xs-center" xs v-if="!user">
-            <p>This page is only available to authenticated users</p>
-        </constrain>
-        <constrain v-if="user">
-            <v-container class="page-header">
-                <h1>Change Account</h1>
-                <p>Select an account below</p>
-                <div v-if="!loaded">
-                    <v-progress-circular indeterminate></v-progress-circular>
-                    <div>Loading...</div>
-                </div>
-            </v-container>
-            <v-container v-if="accounts.length">
-                <v-card>
-                    <v-card-title>
-                        Accounts
-                        <v-spacer></v-spacer>
-                        <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
-                    </v-card-title>
-                    <v-data-table :rows-per-page-items="pageOptions" :headers="headers" :items="filtered" class="elevation-1">
-                        <template v-slot:items="props">
-                            <td><strong>{{ props.item.title }}</strong></td>
-                            <td class="text-xs-right">
-                                <v-btn flat color="primary" @click="changeAccount(props.item)">
-                                    <span>Sign In</span>
-                                    <font-awesome-icon right :icon="['fas', 'arrow-right']" />
-                                </v-btn>
-                            </td>
-                        </template>
-                    </v-data-table>
-                </v-card>
-            </v-container>
-        </constrain>
-    </v-container>
-    <!-- </wrapper> -->
+            <constrain class="text-xs-center" xs v-if="!user">
+                <p>This page is only available to authenticated users</p>
+            </constrain>
+            <constrain v-if="user">
+                <v-container class="page-header">
+                    <h1>Change Account</h1>
+                    <p>Select an account below</p>
+                    <div v-if="!loaded">
+                        <v-progress-circular indeterminate></v-progress-circular>
+                        <div>Loading...</div>
+                    </div>
+                </v-container>
+                <v-container v-if="accounts.length">
+                    <v-card>
+                        <v-card-title>
+                            Accounts
+                            <v-spacer></v-spacer>
+                            <v-text-field v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+                        </v-card-title>
+                        <v-data-table :rows-per-page-items="pageOptions" :headers="headers" :items="filtered" class="elevation-1">
+                            <template v-slot:items="props">
+                                <td><strong>{{ props.item.title }}</strong></td>
+                                <td class="text-xs-right">
+                                    <v-btn flat color="primary" @click="changeAccount(props.item)">
+                                        <span>Sign In</span>
+                                        <font-awesome-icon right :icon="['fas', 'arrow-right']" />
+                                    </v-btn>
+                                </td>
+                            </template>
+                        </v-data-table>
+                    </v-card>
+                </v-container>
+            </constrain>
+        </v-container>
+    </page>
 </template>
 <script>
 // import { mapGetters, mapMutations } from 'vuex';
@@ -45,7 +44,7 @@ import _ from 'lodash';
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 import PagedMixin from '@/mixins/PagedMixin';
-import { Layout } from 'fluro-vue';
+import { Layout } from 'fluro-vue-ui';
 
 
 export default {

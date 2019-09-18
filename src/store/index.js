@@ -7,6 +7,7 @@ import Vuex from 'vuex'
 
 //Modules
 import ui from './modules/ui';
+// import routerState from './modules/routerState';
 
 
 //Initiate Vuex
@@ -21,6 +22,7 @@ const store = new Vuex.Store({
     // plugins: [createPersistedState()],
     modules:{
       ui,
+      // routerState,
     },
     ///////////////////////////////////////
 

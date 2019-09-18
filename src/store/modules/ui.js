@@ -17,6 +17,9 @@ const mutations = {
     drawer(state, payload) {
         state.drawer = payload;
     },
+    drawerMini(state, payload) {
+        state.drawerMini = payload;
+    },
     
 
     // drawer(state, payload) {
@@ -36,6 +39,9 @@ const getters = {
     getField,
     drawer(state, getters) {
         return state.drawer;
+    },
+    drawerMini(state, getters) {
+        return state.drawerMini;
     },
     
     // drawer(state) {

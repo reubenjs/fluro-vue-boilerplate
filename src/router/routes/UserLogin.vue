@@ -1,24 +1,26 @@
 <template>
-    <v-container>
-        <wrapper>
-            <constrain xs>
-                <div class="login-logo">
-                    <div>
-                        <h2>Sign In</h2>
-                        <!-- <p class="text-muted small">Please log in to continue</p> -->
+    <page center>
+        <v-container style="min-width:320px;">
+            <wrapper>
+                <constrain xs>
+                    <div class="login-logo">
+                        <div>
+                            <h2>Sign In</h2>
+                            <!-- <p class="text-muted small">Please log in to continue</p> -->
+                        </div>
                     </div>
-                </div>
-                <form @submit.prevent="submit">
-                    <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
-                    <v-text-field ref="password" v-model="password" :error-messages="passwordErrors" label="Password" required @input="$v.password.$touch()" @blur="$v.password.$touch()" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'visibility' : 'visibility_off'" @click:append="showPassword = !showPassword"></v-text-field>
-                    <!--  -->
-                    <v-btn block large :disabled="$v.$invalid" color="primary" type="submit">Sign In</v-btn>
-                    <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
-                    <v-btn block :to="{name:'user.forgot'}" large flat>Forgot Password?</v-btn>
-                </form>
-            </constrain>
-        </wrapper>
-    </v-container>
+                    <form @submit.prevent="submit">
+                        <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
+                        <v-text-field ref="password" v-model="password" :error-messages="passwordErrors" label="Password" required @input="$v.password.$touch()" @blur="$v.password.$touch()" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'visibility' : 'visibility_off'" @click:append="showPassword = !showPassword"></v-text-field>
+                        <!--  -->
+                        <v-btn block large :disabled="$v.$invalid" :loading="loading" color="primary" type="submit">Sign In</v-btn>
+                        <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
+                        <v-btn block :to="{name:'user.forgot'}" large flat>Forgot Password?</v-btn>
+                    </form>
+                </constrain>
+            </wrapper>
+        </v-container>
+    </page>
 </template>
 <script>
 import _ from 'lodash';
@@ -27,7 +29,8 @@ import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 import { validationMixin } from 'vuelidate';
 import { required, maxLength, email } from 'vuelidate/lib/validators';
-import { Layout } from 'fluro-vue';
+import { Layout } from 'fluro-vue-ui';
+import RouterHistory from '@/router/history';
 
 
 
@@ -39,6 +42,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             password: '',
             showPassword: false,
         }
@@ -58,10 +62,12 @@ export default {
             var self = this;
 
             //Check if there is an application
-            var applicationContext = (this.application && this.application.authenticationStyle == 'application');
+            var applicationContext = (self.application && self.application.authenticationStyle == 'application');
+
+            self.loading = true;
 
 
-            this.$fluro.auth.login({
+            self.$fluro.auth.login({
                     username: self.email,
                     password: self.password,
                 }, {
@@ -74,23 +80,45 @@ export default {
 
             function loginSuccess(res) {
 
+                self.password = '';
                 var user = res.data;
                 console.log('Login success', user);
                 // instance.$store.commit('user', res.data);
 
-                self.$toasted.show(`Welcome back ${user.firstName}!`, {
+                // self.$toasted.show(`Welcome back ${user.firstName}!`, {
+                //     // icon:'check'
+                //     duration: 3500,
+                //     type: 'success',
+                // })
+
+                self.$fluro.notify(`Welcome back ${user.firstName}!`, {
                     // icon:'check'
                     duration: 3500,
                     type: 'success',
                 })
 
 
-                if (window.history.length) {
-                    self.$router.go(-1)
+
+                // console.log('Back to RouterHistory', RouterHistory);
+                // if (RouterHistory.trail.length > 1) {
+
+                //     self.$router.go(-1)
+                //     // return RouterHistory.trail.length > 1;
+                // } else {
+                //Go to the home page
+
+
+
+                if (RouterHistory.intendedPath) {
+                    console.log('Go to intended path', RouterHistory.intendedPath)
+                    self.$router.replace(RouterHistory.intendedPath);
+                    RouterHistory.intendedPath = null;
                 } else {
-                    //Go to the home page
-                    self.$router.push({ name: 'home' });
+                    self.$router.replace({ name: 'home' });
                 }
+
+                self.loading = false;
+                // }
             }
 
             //////////////////////////////////
@@ -109,7 +137,7 @@ export default {
                 })
 
 
-
+                self.loading = false;
                 // instance.$store.dispatch('logout');
             }
 

@@ -1,83 +1,42 @@
 <template>
-    <wrapper>
-        <constrain v-if="keywords.length">
-            <h1>Searching <span class="text-muted">// {{keywords}}</span></h1>
-            <div v-if="!loaded">
-                <v-progress-circular indeterminate></v-progress-circular>
-                <div>Searching...</div>
-            </div>
-            <div v-if="loaded">
-                
-                    <v-layout row wrap>
-                        <v-flex d-flex xs12 sm4 v-for="column in results" v-if="column.results.length">
-                            <div>
-                                <h3>{{column._type}}</h3>
-                                <router-link :to="{name:'view', params:{slug:item.slug}}" v-for="item in column.results">
-                                    <h4>{{item.title}}</h4>
-                                </router-link>
-
-                            </div>
-                        </v-flex>
-                        <!-- <pre>{{results}}</pre> -->
-                    </v-layout>
-                
-            </div>
-        </constrain>
-        <constrain class="text-xs-center" v-if="!keywords.length">
-            <h1>Search</h1>
-            <p>Type some keywords to continue</p>
-        </constrain>
-    </wrapper>
-    <!-- <div>
-        <v-container fluid class="page-header" v-if="keywords.length">
-            <h1>Searching <span class="text-muted">// {{keywords}}</span></h1>
-            <div v-if="loaded">Found {{results.length}} results</div>
-            <div v-if="!loaded">
-                <v-progress-circular indeterminate></v-progress-circular>
-                <div>Finding results...</div>
-            </div>
-        </v-container>
-        <v-container fluid class="page-header" v-if="!keywords.length">
-            <h1>Search</h1>
-            <div>
-                Please type some keywords to continue
-            </div>
-        </v-container>
-        <div v-if="loaded">
-            <v-container fluid grid-list-md>
-                <paged-content :items="results" :startPage="currentPage" @change="pageChanged" :per-page="48">
-                    <template slot-scope="props">
+    <flex-column>
+        <flex-column-body>
+            <wrapper>
+                <constrain v-if="keywords.length">
+                    <h1>Searching <span class="text-muted">// {{keywords}}</span></h1>
+                    <div v-if="!loaded">
+                        <v-progress-circular indeterminate></v-progress-circular>
+                        <div>Searching...</div>
+                    </div>
+                    <div v-if="loaded">
                         <v-layout row wrap>
-                            <v-flex d-flex @click="view(image)" xs12 sm6 md4 xl2 v-for="image in props.page">
-                                
-                                <thumbnail :image="image"></thumbnail>
+                            <v-flex d-flex xs12 sm4 v-for="column in results" v-if="column.results.length">
+                                <div>
+                                    <h3>{{column._type}}</h3>
+
+                                    <router-link :to="{name:'view', params:{_id:item._id,slug:item.slug}}" v-for="item in column.results">
+                                        <!-- <pre>{{item}}</pre> -->
+                                        <h4>{{item.title}}</h4>
+                                    </router-link>
+                                </div>
                             </v-flex>
+                            <!-- <pre>{{results}}</pre> -->
                         </v-layout>
-                    </template>
-                </paged-content>
-            </v-container>
-        </div>
-        <v-container fluid grid-list-md>
-        <infinite-scroll :items="images">
-
-            <template slot-scope="props">
-                <v-layout row wrap>
-                    <v-flex d-flex @click="view(item)" xs12 sm6 md4 lg2 xl2 v-for="item in props.page">
-                        <thumbnail  :image="item"></thumbnail>
-                    </v-flex>
-                </v-layout>
-            </template>
-
-        </infinite-scroll>
-    </v-container>
-    </div> -->
+                    </div>
+                </constrain>
+                <constrain class="text-xs-center" v-if="!keywords.length">
+                    <h1>Search</h1>
+                    <p>Type some keywords to continue</p>
+                </constrain>
+            </wrapper>
+        </flex-column-body>
+    </flex-column>
 </template>
 <script>
-import PagedContent from '@/components/PagedContent.vue';
 import PagedMixin from '@/mixins/PagedMixin';
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
-import { Layout } from 'fluro-vue';
+import { Layout, FluroPagedContent } from 'fluro-vue-ui';
 
 
 export default {
@@ -88,12 +47,13 @@ export default {
         },
     },
     components: {
-        pagedContent: PagedContent,
+        pagedContent: FluroPagedContent,
     },
     data() {
         return {
             results: [],
             loaded: false,
+            limit: 5,
         }
     },
     watch: {
@@ -105,6 +65,19 @@ export default {
         this.search()
     },
     methods: {
+        style(item) {
+            if (this.$selection.isSelected(item)) {
+                return {
+                    background: 'yellow',
+                }
+            } else {
+                return {};
+            }
+        },
+        clicked(item) {
+            this.$fluro.global.view(item);
+            // this.$selection.toggle(item);
+        },
         total() {
             return this.results.length;
         },
@@ -125,22 +98,83 @@ export default {
 
             ///////////////////////////////////////////////
 
-            var criteria = {};
+            var types = [
+                'product',
+                'purchase',
+                'collection',
+                'policy',
+                'query',
+                'family',
+                'persona',
+                'contact',
+                'contactdetail',
+                'event',
+                'team',
+                'realm',
+                'article',
+                'asset',
+                'image',
+                'video',
+                'audio',
+                'interaction',
+                'application',
+                'definition',
+            ]
+
+            var basicFields = 'name realms slug title definition width height module description color bgColor firstLine firstName lastName gender duration filesize _type startDate endDate status assetType external extension mimetype';
 
             var promise = this.$fluro.content.search(keywords, {
-                limit: 5,
-                types: [
-                    'article',
-                    'contact',
-                    'event',
-                    'image',
-                ],
+                limit: self.limit,
+                simple: true,
+                select: basicFields,
+                allDefinitions: true,
+                populateFields: 'realms',
+                populateSelect: 'color bgColor _discriminator _definition definition _discriminatorType title',
+                statuses: ['active', 'archived', 'draft'],
+                searchInheritable: true,
+                expanded: true,
+                types: types,
                 cache: false, //Request new results from the server every request
             })
 
             promise.then(function(results) {
                 // console.log('GOt the sturffff!', res);
-                self.results = results;
+
+                self.results = _.chain(results)
+                    .map(function(column) {
+
+
+                        return _.chain(column.results)
+                            .reduce(function(set, entry) {
+
+                                //Get the entry definitionName
+                                var definitionName = entry.definition || column._type;
+
+                                var existing = set[definitionName];
+
+                                if (!existing) {
+                                    existing =
+                                        set[definitionName] = {
+                                            _type: definitionName,
+                                            results: [],
+                                            total: 0,
+                                        }
+                                }
+
+                                existing.results.push(entry);
+                                existing.total++;
+
+                                return set;
+
+                            }, {})
+                            .values()
+                            .value();
+                    })
+                    .flatten()
+                    .value();
+
+
+
                 self.loaded = true;
 
             }, function(err) {

@@ -1,5 +1,6 @@
 <template>
-    <v-container>
+   <page center>
+        <v-container style="min-width:320px;">
         <wrapper>
             <constrain class="text-xs-center" xs v-if="loading">
                 <p class="lead">Processing...</p>
@@ -32,6 +33,7 @@
             </constrain>
         </wrapper>
     </v-container>
+</page>
 </template>
 <script>
 import _ from 'lodash';
@@ -40,7 +42,7 @@ import UserMixin from '@/mixins/UserMixin';
 
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
-import { Layout } from 'fluro-vue';
+import { Layout } from 'fluro-vue-ui';
 
 /////////////////////////////////////////
 
@@ -104,7 +106,7 @@ export default {
                 //There was a fail
                 var message = self.$fluro.utils.errorMessage(err)
 
-                self.$toasted.show(message, {
+                self.$fluro.notify(message, {
                     duration: 5500,
                     type: 'error',
                 })
@@ -220,7 +222,7 @@ export default {
                     console.log('Were good!');
                     self.loading = false;
 
-                    self.$toasted.show(`Changes saved!`, {
+                    self.$fluro.notify(`Changes saved!`, {
                         duration: 3500,
                         type: 'success',
                     })
@@ -236,7 +238,7 @@ export default {
                     //There was a fail
                     var message = self.$fluro.utils.errorMessage(err)
 
-                    self.$toasted.show(message, {
+                    self.$fluro.notify(message, {
                         duration: 3500,
                         type: 'error',
                     })

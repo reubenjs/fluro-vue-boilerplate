@@ -1,5 +1,6 @@
 <template>
-     <v-container>
+    <page center>
+        <v-container style="min-width:320px;">
     <wrapper>
         <constrain sm>
             <div class="login-logo">
@@ -35,6 +36,7 @@
         </constrain>
     </wrapper>
 </v-container>
+</page>
 </template>
 <script>
 import _ from 'lodash';
@@ -43,7 +45,7 @@ import UserMixin from '@/mixins/UserMixin';
 
 import { validationMixin } from 'vuelidate';
 import { required, minLength, maxLength, email } from 'vuelidate/lib/validators';
-import { Layout } from 'fluro-vue';
+import { Layout } from 'fluro-vue-ui';
 
 
 
@@ -121,7 +123,7 @@ export default {
                 console.log('Signup success', user);
                 // instance.$store.commit('user', res.data);
 
-                self.$toasted.show(`Welcome ${user.firstName}!`, {
+                self.$fluro.notify(`Welcome ${user.firstName}!`, {
                     // icon:'check'
                     duration: 3500,
                     type: 'success',
@@ -145,7 +147,7 @@ export default {
 
                 console.log('ERROR!', message, err);
 
-                self.$toasted.show(message, {
+                self.$fluro.notify(message, {
                     // icon:'check'
                     duration: 3500,
                     type: 'error',

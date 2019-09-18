@@ -9,6 +9,10 @@ process.env.VUE_APP_API_LIVE = 'https://api.fluro.io';
 process.env.VUE_APP_API_STAGING = 'https://api.staging.fluro.io';
 process.env.VUE_APP_API_LOCAL = 'http://api.fluro.localhost:3000';
 
+
+
+
+
 ///////////////////////////////////////////////////////////
 
 //API URLS
@@ -19,7 +23,7 @@ switch (process.env.NODE_ENV) {
         process.env.VUE_APP_REMOTE_URL = 'https://boilerplate.fluro.io';
         break;
     default:
-        process.env.VUE_APP_FLURO_ENV = 'staging';
+        process.env.VUE_APP_FLURO_ENV = 'production';
         process.env.VUE_APP_REMOTE_URL = '';
         break;
 }
@@ -34,6 +38,13 @@ var webpack = require('webpack');
 module.exports = {
     runtimeCompiler: true,
     chainWebpack: config => config.resolve.symlinks(false),
+    css: {
+        loaderOptions: {
+            sass: {
+                data: `@import "@/styles/_variables.scss"; @import "@/styles/_app.scss";`
+            }
+        }
+    },
     configureWebpack: {
         plugins: [
             new webpack.ProvidePlugin({

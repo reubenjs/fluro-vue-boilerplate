@@ -1,0 +1,178 @@
+$dark: #33373e;
+$primary: #1bc3fe;
+$secondary: #d1f18a;
+
+$success: #4cc650;
+$warning: #f0974e;
+$danger: #d93e63;
+$highlight-color: #ffeb3b;//yellow;
+
+
+
+
+.no-select {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Chrome/Safari/Opera */
+    -khtml-user-select: none;
+    /* Konqueror */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently not supported by any browser */
+}
+
+//////////////////////////////////////////
+
+.scroll-y {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+//////////////////////////////////////////
+
+
+.border-top {
+    border-top: 1px solid rgba(#000, 0.05);
+}
+
+.border-right {
+    border-right: 1px solid rgba(#000, 0.05);
+}
+
+.border-bottom {
+    border-bottom: 1px solid rgba(#000, 0.05);
+}
+
+.border-left {
+    border-left: 1px solid rgba(#000, 0.05);
+}
+
+//////////////////////////////////////////
+
+.text-muted,
+.muted {
+    opacity: 0.5;
+}
+
+.text-capitalize,
+.capitalize {
+    text-transform: capitalize;;
+}
+
+
+//////////////////////////////////////////
+
+
+$headings: 'h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6';
+
+#{$headings} {
+    //Affect all headings here
+    letter-spacing: -0.02em;
+    font-weight: 500;
+
+
+   
+
+    &.margin,
+    &[margin] {
+        line-height: 36px;
+         margin:0 0 1em;
+    }
+
+
+    &.text-muted,
+    &.muted,
+    .text-muted,
+    .muted {
+        opacity: 0.5;
+        font-weight: normal;
+    }
+
+    svg {
+        display: inline-block;
+        line-height: inherit;
+        vertical-align: middle;
+        margin:0;
+        padding:0;
+    }
+}
+
+
+h1,
+.h1 {
+    font-size: 3em;
+    line-height: 1;
+}
+
+h2,
+.h2 {
+    font-size: 2em;
+}
+
+h3,
+.h3 {
+    font-size: 1.5em;
+}
+
+h4,
+.h4 {
+    font-size: 1.3em;
+}
+
+h5,
+.h5 {
+    font-size: 1.2em;
+}
+
+h6,
+.h6 {
+    font-size: 1.1em;
+}
+
+//////////////////////////////////////////
+
+.xl {
+    font-size: 1.4em;
+}
+
+.lg {
+    font-size: 1.2em;
+}
+
+.sm {
+    font-size: 0.8em;
+}
+
+.xs {
+    font-size: 0.6em;
+}
+
+//////////////////////////////////////////
+
+.inline-tag {
+    font-size: .7em;
+    font-weight: 500;
+    display: inline-block;
+    background: rgba(#38a99c, .1);
+    color: #18635a;
+    padding: 3px 8px;
+    margin: 0 5px 5px 0;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+
+.overflow-y-hidden {
+    overflow-y: hidden !important;
+}
+
+

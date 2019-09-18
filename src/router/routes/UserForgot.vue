@@ -1,5 +1,6 @@
 <template>
-    <v-container>
+    <page center>
+        <v-container style="min-width:320px;">
         <wrapper>
             <constrain xs v-if="!loading">
                 <div class="login-logo">
@@ -20,6 +21,7 @@
             </constrain>
         </wrapper>
     </v-container>
+</page>
 </template>
 <script>
 import _ from 'lodash';
@@ -30,7 +32,7 @@ import { required, maxLength, email } from 'vuelidate/lib/validators';
 
 import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
-import { Layout } from 'fluro-vue';
+import { Layout } from 'fluro-vue-ui';
 
 /////////////////////////////////////////////////////////
 
@@ -89,7 +91,7 @@ export default {
 
                 var user = res.data;
 
-                self.$toasted.show(`Instructions have been sent to ${self.email}`, {
+                self.$fluro.notify(`Instructions have been sent to ${self.email}`, {
                     duration: 8000,
                     type: 'success',
                 })
@@ -107,7 +109,7 @@ export default {
 
                 console.log('ERROR!', message, err);
 
-                self.$toasted.show(message, {
+                self.$fluro.notify(message, {
                     // icon:'check'
                     duration: 3500,
                     type: 'error',
