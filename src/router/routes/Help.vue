@@ -1,7 +1,7 @@
 <template>
     <page>
         <flex-column>
-            <flex-column-content>
+            <flex-column-body>
                 <wrapper>
                     <constrain sm>
                         <div title>
@@ -13,7 +13,7 @@
                        
                     </constrain>
                 </wrapper>
-            </flex-column-content>
+            </flex-column-body>
         </flex-column>
     </page>
 </template>

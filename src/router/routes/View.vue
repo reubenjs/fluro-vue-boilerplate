@@ -1,7 +1,7 @@
 <template>
     <page>
         <flex-column>
-            <flex-column-content>
+            <flex-column-body>
                 <v-container>
                     <template v-if="!item">
                         Loading...
@@ -13,7 +13,7 @@
                         <pre>{{item}}</pre>
                     </template>
                 </v-container>
-            </flex-column-content>
+            </flex-column-body>
         </flex-column>
     </page>
 </template>
