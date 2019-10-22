@@ -1,27 +1,27 @@
 <template>
     <page center>
         <v-container style="min-width:320px;">
-        <wrapper>
-            <constrain xs v-if="!loading">
-                <div class="login-logo">
-                    <div>
-                        <h2>Forgotten Password</h2>
-                        <p class="text-muted small">Enter your email to reset your password</p>
+            <wrapper>
+                <constrain xs v-if="!loading">
+                    <div class="login-logo">
+                        <div>
+                            <h2>Forgotten Password</h2>
+                            <p class="text-muted small">Enter your email to reset your password</p>
+                        </div>
                     </div>
-                </div>
-                <form @submit.prevent="submit">
-                    <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
-                    <v-btn block large color="primary" :disabled="$v.$invalid" type="submit">Send Reset Link</v-btn>
-                    <v-btn block @click="back()" large flat>Back</v-btn>
-                </form>
-            </constrain>
-            <constrain class="text-xs-center" xs v-if="loading">
-                <p class="lead">Processing...</p>
-                <v-progress-circular indeterminate></v-progress-circular>
-            </constrain>
-        </wrapper>
-    </v-container>
-</page>
+                    <form @submit.prevent="submit">
+                        <v-text-field ref="email" v-model="email" :error-messages="emailErrors" label="Email Address" required @blur="$v.email.$touch()"></v-text-field>
+                        <v-btn block large color="primary" :disabled="$v.$invalid" type="submit">Send Reset Link</v-btn>
+                        <v-btn block @click="back()" large flat>Back</v-btn>
+                    </form>
+                </constrain>
+                <constrain class="text-xs-center" xs v-if="loading">
+                    <p class="lead">Processing...</p>
+                    <v-progress-circular indeterminate></v-progress-circular>
+                </constrain>
+            </wrapper>
+        </v-container>
+    </page>
 </template>
 <script>
 import _ from 'lodash';
@@ -74,16 +74,34 @@ export default {
 
 
 
-            this.$fluro.auth.sendResetPasswordRequest({
-                    username: self.email,
-                    //This is the route that will receive the token
-                    //for the user to reset their password
-                    redirect: `/user/reset`,
-                }, {
-                    bypassInterceptor: true,
-                    application: applicationContext, //Reset from the application
-                })
-                .then(resetSuccess, resetFail);
+           
+            if (applicationContext) {
+
+                self.$fluro.auth.sendResetPasswordRequest({
+                        username: self.email,
+                        //This is the route that will receive the token
+                        //for the user to reset their password
+                        redirect: `/user/reset`,
+                    }, {
+                        bypassInterceptor: true,
+                        application: applicationContext, //Reset from the application
+                    })
+                    .then(resetSuccess, resetFail);
+
+            } else {
+
+                 console.log('APPLICATION CONTEXT', applicationContext);
+
+                self.$fluro.auth.sendResetPasswordRequest({
+                        username: self.email,
+                    }, {
+                        bypassInterceptor: true,
+                    })
+                    .then(resetSuccess, resetFail);
+            }
+
+
+
 
             //////////////////////////////////
 

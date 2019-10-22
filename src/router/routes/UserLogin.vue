@@ -14,7 +14,9 @@
                         <v-text-field ref="password" v-model="password" :error-messages="passwordErrors" label="Password" required @input="$v.password.$touch()" @blur="$v.password.$touch()" :type="showPassword ? 'text' : 'password'" :append-icon="showPassword ? 'visibility' : 'visibility_off'" @click:append="showPassword = !showPassword"></v-text-field>
                         <!--  -->
                         <v-btn block large :disabled="$v.$invalid" :loading="loading" color="primary" type="submit">Sign In</v-btn>
-                        <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
+                        <template v-if="signupEnabled">
+                            <v-btn block :to="{name:'user.signup'}" large color="light">Create New Account</v-btn>
+                        </template>
                         <v-btn block :to="{name:'user.forgot'}" large flat>Forgot Password?</v-btn>
                     </form>
                 </constrain>
@@ -145,6 +147,16 @@ export default {
         },
     },
     computed: {
+
+        signupEnabled() {
+
+            //Check if this app is setup as a Fluro global application or a whitelabelled application
+            var applicationContext = (this.application && this.application.authenticationStyle == 'application');
+
+            //If we are an application, then signup should be enabled
+            //so users can sign up as a managed persona and authenticate with your app
+            return applicationContext;
+        },
         email: {
             set(email) {
                 this.$store.commit('email', email);

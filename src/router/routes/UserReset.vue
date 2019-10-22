@@ -84,6 +84,7 @@ export default {
         //Check if there is an application
         var applicationContext = (this.application && this.application.authenticationStyle == 'application');
 
+       
 
 
         self.$fluro.auth.retrieveUserFromResetToken(self.token, {
