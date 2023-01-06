@@ -75,7 +75,7 @@ import SEOMixin from '@/mixins/SEOMixin';
 import UserMixin from '@/mixins/UserMixin';
 
 //Get our components from FluroVue
-import { Layout, FluroContentForm, FluroContentField } from 'fluro-vue-ui';
+import { Layout, FluroContentForm, FluroContentRenderField } from 'fluro-vue-ui';
 
 /////////////////////////////////////////
 
@@ -83,7 +83,7 @@ import { Layout, FluroContentForm, FluroContentField } from 'fluro-vue-ui';
 export default {
     components: {
         FluroContentForm,
-        FluroContentField,
+        FluroContentRenderField,
     },
     methods: {
 
